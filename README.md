@@ -33,7 +33,7 @@ For model prediction, a web API is used (created using StreamLit) for user input
 - [Project Instructions (Docker)](#project-instructions-docker)
 - [Project Instructions (Heroku with Docker)](#project-instructions-heroku-with-docker)
 - [Initial Data Cleaning and Feature Engineering](#initial-data-cleaning-and-feature-engineering)
-- [Machine Pipelines Configuration](#machine-pipelines-configuration)
+- [Machine Learning Pipelines Configuration](#machine-learning-pipelines-configuration)
   - [Handling missing values](#i-handling-missing-values)
   - [Handling imbalanced data](#ii-handling-imbalanced-data)
   - [Handling outliers by capping at extreme values](#iii-handling-outliers-by-capping-at-extreme-values)
@@ -105,45 +105,32 @@ For model evaluation on multiclass classification, the following metrics are use
 All plots generated from this section can be found in Intermediate_Train_Results/EDA folder.
 
 #### i. Basic metadata of dataset
-On initial inspection, the current dataset used in this project has a total of 591 features and 1 target label ("Output"). A single "Wafer" feature has "object" data type, which represents unique identifier of a given record and the remaining features have "float" data type that initially indicates continuous features.
+On initial inspection, the current dataset used in this project has a total of 71 features. Both "_id" and "ID.1 features represent unique identifier of a given record and the remaining features have  mix of "float", "int" and "object" data types. Upon closer inspection on data dictionary, there are several date-time related features where further information can be extracted and remaining features are considered as categorical variables.
 
-![Target_Class_Distribution](https://user-images.githubusercontent.com/34255556/194898271-511dc280-e6ee-4d67-a053-500d3386cdd0.png)
+Given that there is no target variable, this project requires creating target variable manually (Wellbeing_Category_WMS - mainly based on variables related to Me and My Feelings Questionairre. More details can be found in the coding file labeled "train preprocessing.py")
 
-From the diagram above, there is a very clear indication of target imbalance between class -1 (non-faulty) and class 1 (faulty) for binary classification. This indicates that target imbalancing needs to be addressed during model training.
+![Target_Class_Distribution](https://user-images.githubusercontent.com/34255556/196934993-fc9bbe23-81c3-459c-8263-2ff26a51b31f.png)
 
-![Proportion of null values](https://user-images.githubusercontent.com/34255556/194897104-3d6291f7-6431-4f83-bf8b-93fe34a724d9.png)
+From the diagram above, there is a very clear indication of target imbalance between all 4 classes for multiclass classification. This indicates that target imbalancing needs to be addressed during model training.
 
-From the diagram above, features with missing values identified have missing proportions approximately grouped into one of the following: 1%, 2%, 3%, 6%, 9%, 34%, 60%, 63%, 67%, 73% and 92%.
+![Proportion of null values](https://user-images.githubusercontent.com/34255556/196935092-1ba7c4e8-740f-49e7-bfc3-2247ee977b32.png)
 
-![Proportion of zero values](https://user-images.githubusercontent.com/34255556/194897249-72e62b69-0c87-4b8e-a1b1-fa584eef23c3.png)
+From the diagram above, most features with missing values identified have missing proportions approximately less than 1%, except for "Method_of_keepintouch" feature with approximately 3% containing missing values.
 
-On another note, there's more than 120 features identified having more than 98% of zero values from the figure above, which might suggest that those features have very little variance which are not relevant for model training.
+Furthermore, the following sets of plots are created for every feature of the dataset that contains less than 100 unique values:
+1. Count plot (Number of unique values per category)
+2. Count plot (Number of unique values per category by target class)
+3. Bar plot (Number of missing values by target class) - For features with missing values
 
-From performing spearman correlation analysis, there are 393 pairs of features having high spearman correlation (with absolute value of greater than 0.8) with one another. The scatterplot diagram below shows an example of two features having very high positive and negative spearman correlation with one another respectively:
-<p float="left">
-<img src="https://user-images.githubusercontent.com/34255556/194897320-8f23f3b7-6a8e-436e-af9d-9cd5d12ebe37.png" width="400">
-<img src="https://user-images.githubusercontent.com/34255556/194897454-8991d997-97ed-4a36-9b33-2eb0e0fa9afd.png" width="400">
-</p>
+For features with more than 100 unique values, a CSV file is generated which represents the distribution of categories.
+In addition, it was observed that features like "Breakfast_ytd", 'Method_of_keepintouch' and 'Type_of_play_places' can contain multiple values (seperated by ";" symbol). Those features are split into its individual categories first before generating a CSV file for representing distribution of categories.
 
-Although there are many pairs of features having high correlation with one another, this doesn't mean that those features with high correlation with other features should be removed from the dataset, which may result in sub-optimal model performance along with feature selection. More scatterplot diagrams can be found within EDA folder, which shows other pairs of features that have high spearman correlation.
-
-Furthermore, the following sets of plots are created for every feature of the dataset:
-1. Box plot
-2. Box plot by target label
-3. Bar plot (Number of missing values by target label) - For features with missing values
-4. Bar plot (Number of zero values by target label) - For features with zero values
-5. Kernel density estimation plot
-
-Both box plots and kernel density estimation plot for every feature helps to identify distribution of data (gaussian vs non-gaussian) and identifying potential outliers.
-
-The set of figures below shows an example of the following plots mentioned above for Sensor102:
+The set of figures below shows an example of the following plots mentioned above for Method_of_keepintouch feature:
 
 <p float="left">
-<img src="https://user-images.githubusercontent.com/34255556/194897845-39f360e2-51b5-43b9-8d06-c78cc6d4ba95.png" width="400">
-<img src="https://user-images.githubusercontent.com/34255556/194897883-40b76270-c614-45ff-88e6-635c36d44230.png" width="400">
-<img src="https://user-images.githubusercontent.com/34255556/194897903-8d960410-b571-4fdf-8f35-c2c55c164a74.png" width="400">
-<img src="https://user-images.githubusercontent.com/34255556/194897924-8fd57fc4-5ed2-4228-8ab2-5b7ead0d07b1.png" width="400">
-<img src="https://user-images.githubusercontent.com/34255556/194897953-b467e9a1-82e5-4b37-a997-c291227a829f.png" width="400">
+<img src="https://user-images.githubusercontent.com/34255556/196936871-869fbabc-b1a1-49e2-93f4-987097581926.png">
+<img src="https://user-images.githubusercontent.com/34255556/196936977-e1f2e831-a255-4650-8c5d-4b27cfc560ef.png">
+<img src="https://user-images.githubusercontent.com/34255556/196937003-dc7e5cd2-7464-40a7-bc77-2dc4d8bd3ca2.png" width="500">
 </p>
 
 ---
@@ -561,7 +548,7 @@ In addition, the following pickle files (with self-explanatory names) have been 
 - <b>Dropconstantfeatures.pkl</b>
 - <b>ZeroIndicator.pkl</b>
 
-## Machine Pipelines Configuration
+## Machine Learning Pipelines Configuration
 ---
 While data preprocessing steps can be done on the entire dataset before model training, it is highly recommended to perform all data preprocessing steps within cross validation using pipelines to reduce the risk of data leakage, where information from training data is leaked to validation/test data.
 
