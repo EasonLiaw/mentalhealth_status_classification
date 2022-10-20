@@ -1,17 +1,17 @@
-# Wafer Status Classification Project
+# Mental Health Status Classification Project
 
 ## Background
 ---
 
-<img src="https://www.semiconductorforu.com/wp-content/uploads/2021/02/silicon-wafer.jpg">
+<img src="https://user-images.githubusercontent.com/34255556/196916971-21406264-79e5-4f70-a418-08c94e4c1b91.png" width="600">
 
-In electronics, a wafer (also called a slice or substrate) is a thin slice of semiconductor used for the fabrication of integrated circuits. Monitoring working conditions of these wafers present its challenges of having additional resources required for manual monitoring with insights and decisions that need to be made quickly for replacing wafers that are not in good working conndition when required. Using IIOT (Industrial Internet of Things) helps to overcome this challenge through a collection of real-time data from multiple sensors. 
+Ever since the start of the pandemic back in 2020, the government expects more lockdowns through the winter to slow down the spread of the virus. One of the concerns raised by the government is the wellbeing of young primary school children since they are removed from their friends and play environments.
 
-Thus, the main goal of this project is to design a machine learning model that predicts whether a wafer is in a good working condition or not based on inputs from 590 different sensors for every wafer. The quality of wafer sensors can be classified into two different categories: 0 for "good wafer" and 1 for "bad wafer".
+For this project, the main goal is to deploy initial classification models that help to monitor a child’s wellbeing status during the pandemic period. By identifying factors that influence the status of a child’s wellbeing through a customized survey, the government will be able to make more informed decisions/new policies that reduce the risk of a child having behavioral or emotional difficulties or both.
 
-Dataset is provided in .csv format by client under <b>Training_Batch_Files</b> folder for model training, while dataset under <b>Prediction_Batch_Files</b> folder will be used for predicting quality of wafer sensors.
+Dataset is provided in .json format by client under Training_Batch_Files folder for model training.
 
-In addition, schema of datasets for training and prediction is provided in .json format by the client for storing seperate csv files into a single MySQL database.
+For model prediction, a web API is used (created using StreamLit) for user input. Note that results generated from model prediction along with user inputs can be stored in various formats (i.e. in CSV file format or another database).
 
 ## Contents
 - [Code and Resources Used](#code-and-resources-used)
@@ -23,9 +23,9 @@ In addition, schema of datasets for training and prediction is provided in .json
   - [Hyperparameter importances from Optuna (Final model)](#4-hyperparameter-importances-from-optuna-final-model)
   - [Hyperparameter tuning optimization history from Optuna](#5-hyperparameter-tuning-optimization-history-from-optuna)
   - [Overall confusion matrix and classification report from final model trained](#6-overall-confusion-matrix-and-classification-report-from-final-model-trained)
-  - [Discrimination Threshold for binary classification](#7-discrimination-threshold-for-binary-classification)
+  - [Precision Recall Curve from best classification model](#7-precision-recall-curve-from-best-classification-model)
   - [Learning Curve Analysis](#8-learning-curve-analysis)
-  - [Feature Importance based on Shap Values](#9-feature-importance-based-on-shap-values)
+  - [Feature Importance based on Shap Values for every class](#9-feature-importance-based-on-shap-values-for-every-class)
 - [CRISP-DM Methodology](#crisp-dm-methodology)
 - [Project Architecture Summary](#project-architecture-summary)
 - [Project Folder Structure](#project-folder-structure)
@@ -46,10 +46,10 @@ In addition, schema of datasets for training and prediction is provided in .json
 ## Code and Resources Used
 ---
 - **Python Version** : 3.10.0
-- **Packages** : borutashap, feature-engine, featurewiz, imbalanced-learn, joblib, catboost, lightgbm, matplotlib, mysql-connector-python, numpy, optuna, pandas, plotly, scikit-learn, scipy, seaborn, shap, streamlit, tqdm, xgboost, yellowbrick
-- **Dataset source** : Education materials from OneNeuron platform
-- **Database**: MySQL
-- **MySQL documentation**: https://dev.mysql.com/doc/
+- **Packages** : borutashap, feature-engine, featurewiz, imbalanced-learn, joblib, catboost, lightgbm, matplotlib, pymongo, numpy, optuna, pandas, plotly, scikit-learn, scipy, seaborn, shap, streamlit, tqdm, xgboost, yellowbrick
+- **Dataset source** : From 360DIGITMG (For confidentiality reasons, dataset is not included here)
+- **Database**: MongoDB
+- **MongoDB documentation**: https://www.mongodb.com/docs/
 - **Optuna documentation** : https://optuna.readthedocs.io/en/stable/
 - **Feature Engine documentation** : https://feature-engine.readthedocs.io/en/latest/
 - **Imbalanced Learn documentation** : https://imbalanced-learn.org/stable/index.html
@@ -69,7 +69,7 @@ In addition, schema of datasets for training and prediction is provided in .json
 
 ## Model Training Setting
 ---
-For this project, nested cross validation with stratification is used for identifying the best model class to use for model deployment. The inner loop of nested cross validation consists of 3 fold cross validation using Optuna (TPE Multivariate Sampler with 20 trials on optimizing average F1 score) for hyperparameter tuning on different training and validation sets, while the outer loop of nested cross validation consists of 5 fold cross validation for model evaluation on different test sets.
+For this project, nested cross validation with stratification is used for identifying the best model class to use for model deployment. The inner loop of nested cross validation consists of 3 fold cross validation using Optuna (TPE Multivariate Sampler with 40 trials on optimizing average F1 macro score) for hyperparameter tuning on different training and validation sets, while the outer loop of nested cross validation consists of 5 fold cross validation for model evaluation on different test sets.
 
 The diagram below shows how nested cross validation works:
 <img src="https://mlr.mlr-org.com/articles/pdf/img/nested_resampling.png" width="600" height="350">
@@ -90,13 +90,12 @@ The following list of classification models are tested in this project:
 - LightGBM Classifier
 - CatBoost Classifier
 
-For model evaluation on binary classification, the following metrics are used in this project:
+For model evaluation on multiclass classification, the following metrics are used in this project:
 - Balanced accuracy
-- Precision
-- Recall
-- F1 score (Main metric for Optuna hyperparameter tuning)
+- Precision (macro)
+- Recall (macro)
+- F1 score (macro) - (Main metric for Optuna hyperparameter tuning)
 - Matthew's correlation coefficient
-- Average precision score
 
 ## Project Findings
 ---
@@ -154,30 +153,29 @@ The following information below summarizes the configuration of the best model i
 
   - <b>Best model class identified</b>: Linear Support Vector Classifier
 
-  - <b>Method of handling imbalanced data</b>: SMOTEENN
-
-  - <b>Method of handling outliers</b>: Retain outliers
-
-  - <b>Method of feature scaling</b>: RobustScaler
-
-  - <b>Removing highly correlated features (>0.8)</b>: Yes
-
-  - <b>Feature selection method</b>: ANOVA
-
-  - <b>Number of features selected</b>: 21
-
-  - <b>List of features selected</b>: ['Sensor95_zero', 'Sensor419_zero', 'Sensor501_zero', 'Sensor104', 'Sensor57', 'Sensor122', 'Sensor112', 'Sensor102_zero', 'Sensor500_zero', 'Sensor434', 'Sensor337', 'Sensor96_zero', 'Sensor184', 'Sensor484_zero', 'Sensor101_zero', 'Sensor269', 'Sensor434_zero', 'Sensor101', 'Sensor113_na', 'Sensor419', 'Sensor110_na']
+  - <b>Method of handling imbalanced data</b>: None
   
-  - <b>Clustering as additional feature</b>: No
+  - <b>Contrast encoding method for ordinal data</b>: Sum Encoder
 
-  - <b>Best model hyperparameters</b>: {'penalty': 'l2', 'loss': 'squared_hinge', 'dual': False, 'tol': 0.0001, 'C': 0.052092773149107, 'multi_class': 'ovr', 'fit_intercept': True, 'intercept_scaling': 1,'class_weight': None, 'verbose': 0, 'random_state': 120, 'max_iter': 1000}
+  - <b>Method of feature scaling</b>: MinMaxScaler
 
+  - <b>Feature selection method</b>: FeatureWiz
+
+  - <b>Number of features selected</b>: 68
+
+  - <b>List of features selected</b>: ['Number_people_household_2', 'Number_people_household_3', 'Enoughtime_toplay_1', 'Enoughtime_toplay_3', 'Outdoorplay_freq_3',  'Method_of_keepintouch_I live near them so I can see them (at a social distance);By phone (texting, calling or video calling);On social media;On games consoles', 'Method_of_keepintouch_I live near them so I can see them (at a social distance);By phone (texting, calling or video calling)', 'Method_of_keepintouch_By phone (texting, calling or video calling);On social media', 'Method_of_keepintouch_By phone (texting, calling or video calling);On social media;On games consoles', 'Method_of_keepintouch_By phone (texting, calling or video calling)', 'Sugarsnack_in_week_1', 'Sugarsnack_in_week_2', 'Sugarsnack_in_week_3', 'Tired_in_week_0', 'Tired_in_week_1', 'Tired_in_week_2', 'Tired_in_week_3', 'Garden', 'Play_near_water', 'Play_in_grass_area', 'Play_in_house','Hours_slept', 'Contact_by_visit', 'Contact_by_phone', 'Snacks_Brk', 'Yogurt_Brk', 'Healthy_Cereal_Brk', 'Easywalk_topark', 'Read_Info_Sheet', 'School_Health_Records', 'Gender_Girl', 'Life_scale', 'School_scale', 'Play_inall_places_3', 'Doingwell_schoolwork_0', 'Sports_in_week_0', 'Internet_in_week_2', 'Takeawayfood_in_week_1', 'Concentrate_in_week_0', 'Going_school_No, I am at home', 'WIMD_2019_Decile', 'Friends_scale', 'Safety_toplay_scale', 'Type_of_play_places_In my house;In my garden', 'Breakfast_ytd_Sugary cereal e.g. cocopops, frosties, sugar puffs, chocolate cereals', 'Homespace_relax_Sometimes but not all the time', 'Study_Year', 'Lots_of_choices_important_1', 'Lots_of_choices_important_4', 'Lots_of_things_good_at_1', 'Lots_of_things_good_at_2', 'Lots_of_things_good_at_4', 'Softdrink_in_week_0', 'Softdrink_in_week_2', 'Softdrink_in_week_3', 'Sleeptime_ytd_sin', 'Sleeptime_ytd_hour_cos', 'Birth_Date_day_of_year_sin', 'Birth_Date_day_of_year_cos', 'Birth_Date_quarter_sin', 'Birth_Date_quarter_cos', 'Awaketime_today_hour_cos', 'Awaketime_today_hour_sin', 'Timestamp_day_of_week_sin', 'Timestamp_month_cos', 'Timestamp_month_sin']
+  
+  - <b>Clustering as additional feature</b>: Yes
+
+  - <b>Best model hyperparameters</b>: 
+  {'C': 0.13529521130402028, 'class_weight': 'balanced', 'dual': False, 'fit_intercept': True, 'intercept_scaling': 1, 'loss': 'squared_hinge', 'max_iter': 1000, 'multi_class': 'ovr', 'penalty': 'l1', 'random_state': 120, 'tol': 0.0001,'verbose': 0}
+  
 Note that the results above may differ by changing search space of hyperparameter tuning or increasing number of trials used in hyperparameter tuning or changing number of folds within nested cross validation.
 
 For every type of classification model tested in this project, a folder is created for every model class within Intermediate_Train_Results folder with the following artifacts:
 
-- Confusion Matrix with default threshold from 5 fold cross validation (.png format)
-- Classification Report with default threshold from 5 fold cross validation (.png format)
+- Confusion Matrix from 5 fold cross validation (.png format)
+- Classification Report from 5 fold cross validation (.png format)
 - HP_Importances for every fold (.png format - 5 in total)
 - Hyperparameter tuning results for every fold (.csv format - 5 in total)
 - Optimization history plot for every fold (.png format - 5 in total)
@@ -186,18 +184,17 @@ For every type of classification model tested in this project, a folder is creat
 
 In addition, the following artifacts are also created for the best model class identified after final hyperparameter tuning on the entire dataset:
 
-- Confusion matrix with default threshold (.png format)
-- Classification report with default threshold (.png format)
+- Confusion matrix (.png format)
+- Classification report (.png format)
 - HP_Importances (.png format)
 - Hyperparameter tuning results (.csv format)
 - Optimization history plot (.png format)
 - Optuna study object (.pkl format)
 - Learning curve plot (.png format)
-- Shap plots for feature importance (.png format - 2 in total)
-- Discrimination threshold plot (.png format)
+- Shap plots for feature importance from every class (.png format - 2 in total)
+- Precision recall curve (.png format)
 
 <b>Warning: The following artifacts mentioned above for the best model class identified will not be generated for certain model classes under the following scenarios:
-- Discrimination threshold plot for CatBoostClassifier: DiscriminationThreshold function from yellowbricks.classifier module is not yet supported for this model class
 - Shap plots for KNeighborsClassifier and GaussianNB: For generating shap values for these model classes, Kernel explainer from Shap module can be used but with large computational time.
 - Shap plots for XGBClassifier with dart booster: Tree explainer from Shap module currently doesn't support XGBClassifier with dart booster.</b>
 
@@ -207,91 +204,102 @@ In addition, the following artifacts are also created for the best model class i
 The following information below summarizes the evaluation metrics *(average (standard deviation)) from the best model identified in this project along with the confusion matrix from nested cross validation (5 outer fold with 3 inner fold): 
 
 <p float="left">
-<img src="https://user-images.githubusercontent.com/34255556/194896776-ff09e7eb-3c64-4752-b090-6efaef960761.png" width="400">
-<img src="https://user-images.githubusercontent.com/34255556/194898691-5ccae77b-7193-4781-9c21-42373012b881.png" width="400">
+<img src="https://user-images.githubusercontent.com/34255556/196926115-2c43b974-4a55-4624-9e17-8db399b9510c.png" width="400">
+<img src="https://user-images.githubusercontent.com/34255556/196926153-0b2b1d2e-7e09-40f0-9db6-360c87085d1a.png" width="400">
 </p>
 
-  - <b>Balanced accuracy (Training set - 3 fold)</b>: 0.7735 (0.0942)
-  - <b>Balanced accuracy (Validation set - 3 fold)</b>: 0.6145 (0.0316)
-  - <b>Balanced accuracy (Test set - 5 fold)</b>: 0.5709 (0.0909)
+  - <b>Balanced accuracy (Training set - 3 fold)</b>: 0.4975 (0.0381)
+  - <b>Balanced accuracy (Validation set - 3 fold)</b>: 0.3367 (0.0267)
+  - <b>Balanced accuracy (Test set - 5 fold)</b>: 0.3484 (0.0284)
 
-  - <b>Precision (Training set - 3 fold)</b>: 0.2591 (0.0587)
-  - <b>Precision (Validation set - 3 fold)</b>: 0.1608 (0.0386)
-  - <b>Precision (Test set - 5 fold)</b>: 0.1133 (0.0720)
+  - <b>Precision (Training set - 3 fold)</b>: 0.5574 (0.1139)
+  - <b>Precision (Validation set - 3 fold)</b>: 0.3854 (0.0504)
+  - <b>Precision (Test set - 5 fold)</b>: 0.3346 (0.0384)
 
-  - <b>Recall (Training set - 3 fold)</b>: 0.6653 (0.2135)
-  - <b>Recall (Validation set - 3 fold)</b>: 0.3556 (0.1215)
-  - <b>Recall (Test set - 5 fold)</b>: 0.2393 (0.1915)
+  - <b>Recall (Training set - 3 fold)</b>: 0.4975 (0.0381)
+  - <b>Recall (Validation set - 3 fold)</b>: 0.3367 (0.0267)
+  - <b>Recall (Test set - 5 fold)</b>: 0.3484 (0.0284)
 
-  - <b>F1 score (Training set - 3 fold)</b>: 0.3604 (0.0858)
-  - <b>F1 score (Validation set - 3 fold)</b>: 0.1831 (0.0222)
-  - <b>F1 score (Test set - 5 fold)</b>: 0.1415 (0.0887)
+  - <b>F1 score (Training set - 3 fold)</b>: 0.4952 (0.0562)
+  - <b>F1 score (Validation set - 3 fold)</b>: 0.3274 (0.0142)
+  - <b>F1 score (Test set - 5 fold)</b>: 0.3293 (0.0265)
 
-  - <b>Matthews Correlation Coefficient (Training set - 3 fold)</b>: 0.3593 (0.1056)
-  - <b>Matthews Correlation Coefficient (Validation set - 3 fold)</b>: 0.1583 (0.0351)
-  - <b>Matthews Correlation Coefficient (Test set - 5 fold)</b>: 0.0993 (0.1109)
-  
-  - <b>Average Precision (Training set - 3 fold)</b>: 0.2037 (0.0824)
-  - <b>Average Precision (Validation set - 3 fold)</b>: 0.0781 (0.0113)
-  - <b>Average Precision (Test set - 5 fold)</b>: 0.1495 (0.0813)
+  - <b>Matthews Correlation Coefficient (Training set - 3 fold)</b>: 0.3590 (0.0605)
+  - <b>Matthews Correlation Coefficient (Validation set - 3 fold)</b>: 0.1631 (0.0316)
+  - <b>Matthews Correlation Coefficient (Test set - 5 fold)</b>: 0.1750 (0.0487)
 
 Note that the results above may differ by changing search space of hyperparameter tuning or increasing number of trials used in hyperparameter tuning or changing number of folds within nested cross validation
 
 ---
 #### 4. Hyperparameter importances from Optuna (Final model)
 
-![HP_Importances_LinearSVC_Fold_overall](https://user-images.githubusercontent.com/34255556/194896701-0a6f16e5-6541-47ee-bf7e-d9a8e4d59833.png)
+![HP_Importances_LinearSVC_Fold_overall](https://user-images.githubusercontent.com/34255556/196925529-e25eac89-ea69-4374-9d54-9951e331c90c.png)
 
-From the image above, determining the method for handling imbalanced data as part of preprocessing pipeline for Linear SVC model provides the highest influence (0.35), followed by selecting hyperparameter value of "C", feature selection and feature scaling method. Setting hyperparameter value of class weight and penalty for Linear SVC model provides little to zero influence on results of hyperparameter tuning. This may suggest that both class weight and penalty hyperparameters of Linear SVC model can be excluded from hyperparameter tuning in the future during model retraining to reduce complexity of hyperparameter tuning process.
+From the image above, determining the contrast method for encoding ordinal data and method for handling imbalanced data as part of preprocessing pipeline for Linear SVC model provides the highest influence (0.22), followed by selecting hyperparameter value of "C", "class_weight" and feature selection method. Setting hyperparameter value of penalty and use of clustering as additional feature for Linear SVC model provides little to zero influence on results of hyperparameter tuning. This may suggest that both penalty hyperparameters of Linear SVC model and use of clustering as additional feature can be excluded from hyperparameter tuning in the future during model retraining to reduce complexity of hyperparameter tuning process.
 
 ---
 #### 5. Hyperparameter tuning optimization history from Optuna
 
-![Optimization_History_LinearSVC_Fold_overall](https://user-images.githubusercontent.com/34255556/194896645-c5402dae-0612-4c56-a91c-b2dd83c3896a.png)
+![Optimization_History_LinearSVC_Fold_overall](https://user-images.githubusercontent.com/34255556/196925946-56216317-c37c-4cb5-ad0b-632145be6386.png)
 
-From the image above, the best objective value (average of F1 scores from 3 fold cross validation) is identified at the end of the Optuna study (approximately 0.17). This may suggest that the number of Optuna trials can be increased further (more than 20 trials) within a reasonable budget, which better sets of hyperparameters may be identified towards later Optuna study trials.
+From the image above, the best objective value (average of F1 macro scores from 3 fold cross validation) is identified after 20 trials.
 
 ---
 #### 6. Overall confusion matrix and classification report from final model trained
 
 <p float="left">
-<img src="https://user-images.githubusercontent.com/34255556/194896442-59b34588-d2c5-4dd6-90c7-9140979d756d.png" width="400">
-<img src="https://user-images.githubusercontent.com/34255556/194896481-376fe3bb-ab81-499c-a2f0-940ca7fe4a89.png" width="400">
+<img src="https://user-images.githubusercontent.com/34255556/196926313-f89b556b-2cd6-4b95-9095-7c3f2733c7e7.png" width="400">
+<img src="https://user-images.githubusercontent.com/34255556/196926276-512f430d-5aaa-4916-96af-c71154cdcc2a.png" width="400">
 </p>
 
-From the image above, the classification model performs better for status of wafers in bad condition (1) with less false negatives (25 samples), as compared to false positives (51 samples). Given that the model evaluation criteria emphasize the costly impact of having both false positives and false negatives equally, the current classification model is optimized to improve F1 score.
+From the image above, the classification model performs better for cases where a child's wellbeing is either normal or emotional and behaviour significant with more samples being classified correctly. Given that the model evaluation criteria emphasize the costly impact of having both false positives and false negatives equally for all classes, the current classification model is optimized to improve F1 macro score.
 
 ---
-#### 7. Discrimination Threshold for binary classification
+#### 7. Precision Recall Curve from best classification model
 
-![Binary_Threshold_LinearSVC](https://user-images.githubusercontent.com/34255556/194896328-35ff3021-3ee5-4e3c-a947-46d13c39a57b.png)
+![PrecisionRecall_Curve_LinearSVC_CV](https://user-images.githubusercontent.com/34255556/196927600-68a0119c-c961-4ad1-9cd0-3efa9d7c1258.png)
 
-From the diagram above, performing 5 fold cross validation on the best model identified shows that the best threshold for optimizing F1 score is 0.13 (meaning that wafers with fault probability of 0.13 or higher are identified as faulty). This threshold can be set when performing model predictions using the best model identified, however the current threshold used for model prediction in this project remains at default value of 0.5. Under the "Saved_Models" folder, a pickle file labeled "Binary_Threshold.pkl" can be used to extract the optimized threshold identified for model prediction with the following syntax below:
-
-```
-visualizer = joblib.load('Saved_Models/Binary_Threshold.pkl')
-best_threshold = visualizer.thresholds_[visualizer.cv_scores_[visualizer.argmax].argmax()]
-```
+From the diagram above, precision-recall curve from best model class identified shows that the model performs best on identify wellbeing status of children that are normal (0.89), followed by emotional_significant (0.10), behaviour_significant (0.09) and emotional_and_behaviour_significant (0.06). 
 
 ---
 #### 8. Learning Curve Analysis
 
-![LearningCurve_LinearSVC](https://user-images.githubusercontent.com/34255556/194896233-1f1e2e4c-d176-40e4-9c72-1dad15791bef.png)
+![LearningCurve_LinearSVC](https://user-images.githubusercontent.com/34255556/196927116-575713c0-699f-4f23-bfd8-248341a22c48.png)
 
-From the diagram above, the gap between train and test F1 scores (from 5-fold cross validation) gradually decreases as number of training sample size increases.
-Since the gap between both scores are very narrow, this indicates that adding more training data may not help to improve generalization of model.
+From the diagram above, the gap between train and test F1 macro scores (from 5-fold cross validation) gradually decreases as number of training sample size increases.
+However, the gap between both scores remain large, which indicates that adding more training data may help to improve generalization of model.
 
 ---
-#### 9. Feature Importance based on Shap Values
+#### 9. Feature Importance based on Shap Values for every class
 
+<b> Emotional and behaviour significant class</b>
 <p float="left">
-<img src="https://user-images.githubusercontent.com/34255556/194895936-b0057e51-46e5-4ffa-bcfe-28c2fdd009a0.png" width="400">
-<img src="https://user-images.githubusercontent.com/34255556/194895875-0947361f-a3a3-4e04-9fc1-ddfedd8dabfd.png" width="400">
+<img src="https://user-images.githubusercontent.com/34255556/196928977-169bdf6d-27b8-4553-82b0-3cd22c727088.png" width="800">
+<img src="https://user-images.githubusercontent.com/34255556/196929024-2083fdcb-1990-4acc-b832-6ecb7e3f5820.png" width="800">
 </p>
 
-From both diagrams above, zero value indicator of Sensor 95 is the most influential variable, while missing value indicator of Sensor 110 is the least influential variable from the top 21 variables identified from feature selection using ANOVA.
+From both diagrams above, gender of child is the most influential variable from the top 68 variables identified from feature selection using FeatureWiz for predicting whether a child's wellbeing is both emotional and behaviour significant. Shap's summary plot provides indication of how values of different features may impact the result of model prediction. For example, gender of child not being identified as female have higher probability of being emotional and behaviour significant, while a child who is very unhappy with school or life (lower value of scale close to 0) has higher probabiliy of being identified as emotional and behaviour significant.
 
-From observing Shap's summary plot (right figure), most continuous features with higher values have higher probability of wafer identified as faulty with the exception of Sensor112, Sensor101 and Sensor419 where lower values indicate higher probability of having a faulty wafer. In addition, most binary categorical features with zero value indicate higher probability of wafer identified as faulty, except for Sensor95, Sensor419 and Sensor500 with zero value indicator and Sensor113 with missing value indicator being the opposite scenario.
+The following plots below represents feature importance based on shap values for other classes for reference:
+
+<b> Emotional significant class</b>
+<p float="left">
+<img src="https://user-images.githubusercontent.com/34255556/196930962-850b0c9a-b95e-4bc5-a2a8-394c89e1cc85.png" width="800">
+<img src="https://user-images.githubusercontent.com/34255556/196931136-4d8b1fe5-16de-4d69-9f70-9bd34ed19a73.png" width="800">
+</p>
+
+<b> Behaviour significant class</b>
+<p float="left">
+<img src="https://user-images.githubusercontent.com/34255556/196930911-5de4d998-39f5-4fcf-ae82-80291b84927d.png" width="800">
+<img src="https://user-images.githubusercontent.com/34255556/196931084-f93f8c56-796e-47e1-b532-34080bae5ceb.png" width="800">
+</p>
+
+<b> Normal class</b>
+<p float="left">
+<img src="https://user-images.githubusercontent.com/34255556/196931003-40fbf74d-df59-4879-bfdb-5e01b65580bf.png" width="800">
+<img src="https://user-images.githubusercontent.com/34255556/196931177-effe0b51-0207-4f09-8621-da4fc694204b.png" width="800">
+</p>
+
 
 ## CRISP-DM Methodology
 ---
@@ -314,33 +322,20 @@ Note that all steps mentioned above have been logged accordingly for future refe
 ---
 The following points below summarizes the use of every file/folder available for this project:
 1. Application_Logger: Helper module for logging model training and prediction process
-2. Archive_Prediction_Data: Stores bad quality prediction csv files that have been used previously for model prediction
-3. Archive_Training_Data: Stores bad quality training csv files that have been used previously for model training
-4. Bad_Prediction_Data: Temporary folder for identifying bad quality prediction csv files
-5. Bad_Training_Data: Temporary folder for identifying bad quality prediction csv files
-6. Good_Prediction_Data: Temporary folder for identifying good quality prediction csv files
-7. Good_Training_Data: Temporary folder for identifying good quality training csv files
-8. Intermediate_Pred_Results: Stores results from model prediction
-9. Intermediate_Train_Results: Stores results from EDA, data preprocessing and model training process
-10. Model_Prediction_Modules: Helper modules for model prediction
-11. Model_Training_Modules: Helper modules for model training
-12. Prediction_Batch_Files: Stores csv batch files to be used for model prediction
-13. Prediction_Data_FromDB: Stores compiled data from SQL database for model prediction
-14. Prediction_Logs: Stores logging information from model prediction for future debugging and maintenance
-15. Saved_Models: Stores best models identified from model training process for model prediction
-16. Training_Batch_Files: Stores csv batch files to be used for model training
-17. Training_Data_FromDB: Stores compiled data from SQL database for model training
-18. Training_Logs: Stores logging information from model training for future debugging and maintenance
-19. Dockerfile: Additional file for Docker project deployment
-20. main.py: Main file for program execution
-21. README.md: Details summary of project for presentation
-22. requirements.txt: List of Python packages to install for project deployment
-23. setup.py : Script for installing relevant python packages for project deployment
-24. schema_prediction.json: JSON file that contains database schema for model prediction
-25. schema_training.json: JSON file that contains database schema for model training
-26. Docker_env: Folder that contains files that are required for project deployment without logging files or results.
-27. BorutaShap.py: Modified python script with some changes to coding for performing feature selection based on shap values on test set
-28. _tree.py: Modified python script to include AdaBoost Classifier as part of the set of models that support Shap library.
+2. Intermediate_Train_Results: Stores results from EDA, data preprocessing and model training process
+3. Model_Training_Modules: Helper modules for model training
+4. Saved_Models: Stores best models identified from model training process for model prediction
+5. Training_Batch_Files: Stores csv batch files to be used for model training
+6. Training_Data_FromDB: Stores compiled data from SQL database for model training
+7. Training_Logs: Stores logging information from model training for future debugging and maintenance
+8. Dockerfile: Additional file for Docker project deployment
+9. main.py: Main file for program execution
+10. README.md: Details summary of project for presentation
+11. requirements.txt: List of Python packages to install for project deployment
+12. setup.py : Script for installing relevant python packages for project deployment
+13. Docker_env: Folder that contains files that are required for project deployment without logging files or results.
+14. BorutaShap.py: Modified python script with some changes to coding for performing feature selection based on shap values on test set
+15. _tree.py: Modified python script to include AdaBoost Classifier as part of the set of models that support Shap library.
 
 
 The following sections below explains the three main approaches that can be used for deployment in this project:
