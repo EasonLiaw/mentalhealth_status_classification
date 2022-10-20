@@ -1,0 +1,22 @@
+2022-10-16/17:59:13		Start performing exploratory data analysis
+2022-10-16/17:59:13		Start reading compiled data from database
+2022-10-16/17:59:13		Finish reading compiled data from database
+2022-10-16/17:59:37		Start deriving target values on the dataset.
+2022-10-16/17:59:37		Finish deriving target values on the dataset.
+2022-10-16/18:00:11		Finish performing exploratory data analysis
+2022-10-16/18:00:22		Start of data preprocessing
+2022-10-16/18:00:22		Start reading compiled data from database
+2022-10-16/18:00:22		Finish reading compiled data from database
+2022-10-16/18:00:22		Start deriving target values on the dataset.
+2022-10-16/18:00:22		Finish deriving target values on the dataset.
+2022-10-16/18:00:22		Start reformatting certain time features on the dataset.
+2022-10-16/18:00:22		Finish reformatting certain time features on the dataset.
+2022-10-16/18:00:22		Start removing irrelevant columns from the dataset
+2022-10-16/18:00:22		Finish removing irrelevant columns from the dataset
+2022-10-16/18:00:22		Start handling duplicated rows in the dataset
+2022-10-16/18:00:22		Finish handling duplicated rows in the dataset
+2022-10-16/18:00:22		Start separating the data into features and labels
+2022-10-16/18:00:22		Finish separating the data into features and labels
+2022-10-16/18:00:22		Start imputing missing categorical data by most frequent category
+2022-10-16/18:00:22		Finish imputing missing categorical data by most frequent category
+2022-10-16/18:00:22		End of data preprocessing

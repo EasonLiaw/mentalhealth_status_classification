@@ -1,0 +1,448 @@
+2022-10-18/18:52:15		Start process of model selection
+2022-10-18/18:52:15		Start hyperparameter tuning for LogisticRegression for fold 1
+2022-10-18/19:06:56		Hyperparameter tuning for LogisticRegression completed for fold 1
+2022-10-18/19:06:56		Start using best pipeline for LogisticRegression for transforming training and validation data for fold 1
+2022-10-18/19:07:20		Finish using best pipeline for LogisticRegression for transforming training and validation data for fold 1
+2022-10-18/19:07:20		Start evaluating model performance for LogisticRegression on validation set for fold 1
+2022-10-18/19:07:22		Evaluating model performance for LogisticRegression on validation set completed for fold 1
+2022-10-18/19:07:22		Optimized results for LogisticRegression model saved for fold 1
+2022-10-18/19:07:32		Start hyperparameter tuning for LogisticRegression for fold 2
+2022-10-18/19:40:07		Hyperparameter tuning for LogisticRegression completed for fold 2
+2022-10-18/19:40:07		Start using best pipeline for LogisticRegression for transforming training and validation data for fold 2
+2022-10-18/19:41:22		Finish using best pipeline for LogisticRegression for transforming training and validation data for fold 2
+2022-10-18/19:41:22		Start evaluating model performance for LogisticRegression on validation set for fold 2
+2022-10-18/19:41:24		Evaluating model performance for LogisticRegression on validation set completed for fold 2
+2022-10-18/19:41:24		Optimized results for LogisticRegression model saved for fold 2
+2022-10-18/19:41:35		Start hyperparameter tuning for LogisticRegression for fold 3
+2022-10-18/20:08:16		Hyperparameter tuning for LogisticRegression completed for fold 3
+2022-10-18/20:08:16		Start using best pipeline for LogisticRegression for transforming training and validation data for fold 3
+2022-10-18/20:08:29		Finish using best pipeline for LogisticRegression for transforming training and validation data for fold 3
+2022-10-18/20:08:29		Start evaluating model performance for LogisticRegression on validation set for fold 3
+2022-10-18/20:08:29		Evaluating model performance for LogisticRegression on validation set completed for fold 3
+2022-10-18/20:08:29		Optimized results for LogisticRegression model saved for fold 3
+2022-10-18/20:08:39		Start hyperparameter tuning for LogisticRegression for fold 4
+2022-10-18/20:34:57		Hyperparameter tuning for LogisticRegression completed for fold 4
+2022-10-18/20:34:57		Start using best pipeline for LogisticRegression for transforming training and validation data for fold 4
+2022-10-18/20:35:29		Finish using best pipeline for LogisticRegression for transforming training and validation data for fold 4
+2022-10-18/20:35:29		Start evaluating model performance for LogisticRegression on validation set for fold 4
+2022-10-18/20:35:29		Evaluating model performance for LogisticRegression on validation set completed for fold 4
+2022-10-18/20:35:29		Optimized results for LogisticRegression model saved for fold 4
+2022-10-18/20:35:39		Start hyperparameter tuning for LogisticRegression for fold 5
+2022-10-18/21:04:34		Hyperparameter tuning for LogisticRegression completed for fold 5
+2022-10-18/21:04:34		Start using best pipeline for LogisticRegression for transforming training and validation data for fold 5
+2022-10-18/21:04:42		Finish using best pipeline for LogisticRegression for transforming training and validation data for fold 5
+2022-10-18/21:04:42		Start evaluating model performance for LogisticRegression on validation set for fold 5
+2022-10-18/21:04:42		Evaluating model performance for LogisticRegression on validation set completed for fold 5
+2022-10-18/21:04:43		Optimized results for LogisticRegression model saved for fold 5
+2022-10-18/21:04:53		Average optimized results for LogisticRegression model saved
+2022-10-18/21:35:58		Start hyperparameter tuning for LinearSVC for fold 1
+2022-10-18/21:38:13		Hyperparameter tuning for LinearSVC completed for fold 1
+2022-10-18/21:38:13		Start using best pipeline for LinearSVC for transforming training and validation data for fold 1
+2022-10-18/21:38:16		Finish using best pipeline for LinearSVC for transforming training and validation data for fold 1
+2022-10-18/21:38:16		Start evaluating model performance for LinearSVC on validation set for fold 1
+2022-10-18/21:38:17		Evaluating model performance for LinearSVC on validation set completed for fold 1
+2022-10-18/21:38:17		Optimized results for LinearSVC model saved for fold 1
+2022-10-18/21:38:27		Start hyperparameter tuning for LinearSVC for fold 2
+2022-10-18/21:40:30		Hyperparameter tuning for LinearSVC completed for fold 2
+2022-10-18/21:40:30		Start using best pipeline for LinearSVC for transforming training and validation data for fold 2
+2022-10-18/21:40:33		Finish using best pipeline for LinearSVC for transforming training and validation data for fold 2
+2022-10-18/21:40:33		Start evaluating model performance for LinearSVC on validation set for fold 2
+2022-10-18/21:40:33		Evaluating model performance for LinearSVC on validation set completed for fold 2
+2022-10-18/21:40:33		Optimized results for LinearSVC model saved for fold 2
+2022-10-18/21:40:43		Start hyperparameter tuning for LinearSVC for fold 3
+2022-10-18/21:55:00		Hyperparameter tuning for LinearSVC completed for fold 3
+2022-10-18/21:55:01		Start using best pipeline for LinearSVC for transforming training and validation data for fold 3
+2022-10-18/21:56:59		Finish using best pipeline for LinearSVC for transforming training and validation data for fold 3
+2022-10-18/21:56:59		Start evaluating model performance for LinearSVC on validation set for fold 3
+2022-10-18/21:57:04		Evaluating model performance for LinearSVC on validation set completed for fold 3
+2022-10-18/21:57:04		Optimized results for LinearSVC model saved for fold 3
+2022-10-18/21:57:14		Start hyperparameter tuning for LinearSVC for fold 4
+2022-10-18/22:05:55		Hyperparameter tuning for LinearSVC completed for fold 4
+2022-10-18/22:05:55		Start using best pipeline for LinearSVC for transforming training and validation data for fold 4
+2022-10-18/22:06:02		Finish using best pipeline for LinearSVC for transforming training and validation data for fold 4
+2022-10-18/22:06:02		Start evaluating model performance for LinearSVC on validation set for fold 4
+2022-10-18/22:06:02		Evaluating model performance for LinearSVC on validation set completed for fold 4
+2022-10-18/22:06:03		Optimized results for LinearSVC model saved for fold 4
+2022-10-18/22:06:13		Start hyperparameter tuning for LinearSVC for fold 5
+2022-10-18/22:16:41		Hyperparameter tuning for LinearSVC completed for fold 5
+2022-10-18/22:16:41		Start using best pipeline for LinearSVC for transforming training and validation data for fold 5
+2022-10-18/22:16:47		Finish using best pipeline for LinearSVC for transforming training and validation data for fold 5
+2022-10-18/22:16:47		Start evaluating model performance for LinearSVC on validation set for fold 5
+2022-10-18/22:16:47		Evaluating model performance for LinearSVC on validation set completed for fold 5
+2022-10-18/22:16:47		Optimized results for LinearSVC model saved for fold 5
+2022-10-18/22:16:57		Average optimized results for LinearSVC model saved
+2022-10-18/22:17:08		Start hyperparameter tuning for KNeighborsClassifier for fold 1
+2022-10-18/22:24:29		Hyperparameter tuning for KNeighborsClassifier completed for fold 1
+2022-10-18/22:24:29		Start using best pipeline for KNeighborsClassifier for transforming training and validation data for fold 1
+2022-10-18/22:24:42		Finish using best pipeline for KNeighborsClassifier for transforming training and validation data for fold 1
+2022-10-18/22:24:42		Start evaluating model performance for KNeighborsClassifier on validation set for fold 1
+2022-10-18/22:24:42		Evaluating model performance for KNeighborsClassifier on validation set completed for fold 1
+2022-10-18/22:24:42		Optimized results for KNeighborsClassifier model saved for fold 1
+2022-10-18/22:24:52		Start hyperparameter tuning for KNeighborsClassifier for fold 2
+2022-10-18/22:33:35		Hyperparameter tuning for KNeighborsClassifier completed for fold 2
+2022-10-18/22:33:35		Start using best pipeline for KNeighborsClassifier for transforming training and validation data for fold 2
+2022-10-18/22:33:52		Finish using best pipeline for KNeighborsClassifier for transforming training and validation data for fold 2
+2022-10-18/22:33:52		Start evaluating model performance for KNeighborsClassifier on validation set for fold 2
+2022-10-18/22:33:53		Evaluating model performance for KNeighborsClassifier on validation set completed for fold 2
+2022-10-18/22:33:53		Optimized results for KNeighborsClassifier model saved for fold 2
+2022-10-18/22:34:03		Start hyperparameter tuning for KNeighborsClassifier for fold 3
+2022-10-18/22:40:01		Hyperparameter tuning for KNeighborsClassifier completed for fold 3
+2022-10-18/22:40:01		Start using best pipeline for KNeighborsClassifier for transforming training and validation data for fold 3
+2022-10-18/22:40:07		Finish using best pipeline for KNeighborsClassifier for transforming training and validation data for fold 3
+2022-10-18/22:40:07		Start evaluating model performance for KNeighborsClassifier on validation set for fold 3
+2022-10-18/22:40:08		Evaluating model performance for KNeighborsClassifier on validation set completed for fold 3
+2022-10-18/22:40:08		Optimized results for KNeighborsClassifier model saved for fold 3
+2022-10-18/22:40:18		Start hyperparameter tuning for KNeighborsClassifier for fold 4
+2022-10-18/22:52:47		Hyperparameter tuning for KNeighborsClassifier completed for fold 4
+2022-10-18/22:52:47		Start using best pipeline for KNeighborsClassifier for transforming training and validation data for fold 4
+2022-10-18/22:53:18		Finish using best pipeline for KNeighborsClassifier for transforming training and validation data for fold 4
+2022-10-18/22:53:18		Start evaluating model performance for KNeighborsClassifier on validation set for fold 4
+2022-10-18/22:53:19		Evaluating model performance for KNeighborsClassifier on validation set completed for fold 4
+2022-10-18/22:53:19		Optimized results for KNeighborsClassifier model saved for fold 4
+2022-10-18/22:53:29		Start hyperparameter tuning for KNeighborsClassifier for fold 5
+2022-10-18/23:00:22		Hyperparameter tuning for KNeighborsClassifier completed for fold 5
+2022-10-18/23:00:22		Start using best pipeline for KNeighborsClassifier for transforming training and validation data for fold 5
+2022-10-18/23:00:26		Finish using best pipeline for KNeighborsClassifier for transforming training and validation data for fold 5
+2022-10-18/23:00:26		Start evaluating model performance for KNeighborsClassifier on validation set for fold 5
+2022-10-18/23:00:26		Evaluating model performance for KNeighborsClassifier on validation set completed for fold 5
+2022-10-18/23:00:26		Optimized results for KNeighborsClassifier model saved for fold 5
+2022-10-18/23:00:37		Average optimized results for KNeighborsClassifier model saved
+2022-10-18/23:00:48		Start hyperparameter tuning for GaussianNB for fold 1
+2022-10-18/23:05:11		Hyperparameter tuning for GaussianNB completed for fold 1
+2022-10-18/23:05:11		Start using best pipeline for GaussianNB for transforming training and validation data for fold 1
+2022-10-18/23:05:18		Finish using best pipeline for GaussianNB for transforming training and validation data for fold 1
+2022-10-18/23:05:18		Start evaluating model performance for GaussianNB on validation set for fold 1
+2022-10-18/23:05:18		Evaluating model performance for GaussianNB on validation set completed for fold 1
+2022-10-18/23:05:18		Optimized results for GaussianNB model saved for fold 1
+2022-10-18/23:05:28		Start hyperparameter tuning for GaussianNB for fold 2
+2022-10-18/23:10:26		Hyperparameter tuning for GaussianNB completed for fold 2
+2022-10-18/23:10:26		Start using best pipeline for GaussianNB for transforming training and validation data for fold 2
+2022-10-18/23:10:33		Finish using best pipeline for GaussianNB for transforming training and validation data for fold 2
+2022-10-18/23:10:33		Start evaluating model performance for GaussianNB on validation set for fold 2
+2022-10-18/23:10:33		Evaluating model performance for GaussianNB on validation set completed for fold 2
+2022-10-18/23:10:33		Optimized results for GaussianNB model saved for fold 2
+2022-10-18/23:10:43		Start hyperparameter tuning for GaussianNB for fold 3
+2022-10-18/23:16:05		Hyperparameter tuning for GaussianNB completed for fold 3
+2022-10-18/23:16:05		Start using best pipeline for GaussianNB for transforming training and validation data for fold 3
+2022-10-18/23:16:08		Finish using best pipeline for GaussianNB for transforming training and validation data for fold 3
+2022-10-18/23:16:08		Start evaluating model performance for GaussianNB on validation set for fold 3
+2022-10-18/23:16:08		Evaluating model performance for GaussianNB on validation set completed for fold 3
+2022-10-18/23:16:08		Optimized results for GaussianNB model saved for fold 3
+2022-10-18/23:16:18		Start hyperparameter tuning for GaussianNB for fold 4
+2022-10-18/23:26:02		Hyperparameter tuning for GaussianNB completed for fold 4
+2022-10-18/23:26:02		Start using best pipeline for GaussianNB for transforming training and validation data for fold 4
+2022-10-18/23:26:29		Finish using best pipeline for GaussianNB for transforming training and validation data for fold 4
+2022-10-18/23:26:29		Start evaluating model performance for GaussianNB on validation set for fold 4
+2022-10-18/23:26:30		Evaluating model performance for GaussianNB on validation set completed for fold 4
+2022-10-18/23:26:30		Optimized results for GaussianNB model saved for fold 4
+2022-10-18/23:26:40		Start hyperparameter tuning for GaussianNB for fold 5
+2022-10-18/23:36:27		Hyperparameter tuning for GaussianNB completed for fold 5
+2022-10-18/23:36:27		Start using best pipeline for GaussianNB for transforming training and validation data for fold 5
+2022-10-18/23:36:54		Finish using best pipeline for GaussianNB for transforming training and validation data for fold 5
+2022-10-18/23:36:54		Start evaluating model performance for GaussianNB on validation set for fold 5
+2022-10-18/23:36:54		Evaluating model performance for GaussianNB on validation set completed for fold 5
+2022-10-18/23:36:54		Optimized results for GaussianNB model saved for fold 5
+2022-10-18/23:37:04		Average optimized results for GaussianNB model saved
+2022-10-19/08:43:14		Start hyperparameter tuning for DecisionTreeClassifier for fold 1
+2022-10-19/08:50:18		Hyperparameter tuning for DecisionTreeClassifier completed for fold 1
+2022-10-19/08:50:18		Start using best pipeline for DecisionTreeClassifier for transforming training and validation data for fold 1
+2022-10-19/08:50:42		Finish using best pipeline for DecisionTreeClassifier for transforming training and validation data for fold 1
+2022-10-19/08:50:42		Start evaluating model performance for DecisionTreeClassifier on validation set for fold 1
+2022-10-19/08:50:42		Evaluating model performance for DecisionTreeClassifier on validation set completed for fold 1
+2022-10-19/08:50:42		Optimized results for DecisionTreeClassifier model saved for fold 1
+2022-10-19/08:50:52		Start hyperparameter tuning for DecisionTreeClassifier for fold 2
+2022-10-19/08:56:04		Hyperparameter tuning for DecisionTreeClassifier completed for fold 2
+2022-10-19/08:56:04		Start using best pipeline for DecisionTreeClassifier for transforming training and validation data for fold 2
+2022-10-19/08:56:11		Finish using best pipeline for DecisionTreeClassifier for transforming training and validation data for fold 2
+2022-10-19/08:56:11		Start evaluating model performance for DecisionTreeClassifier on validation set for fold 2
+2022-10-19/08:56:12		Evaluating model performance for DecisionTreeClassifier on validation set completed for fold 2
+2022-10-19/08:56:12		Optimized results for DecisionTreeClassifier model saved for fold 2
+2022-10-19/08:56:22		Start hyperparameter tuning for DecisionTreeClassifier for fold 3
+2022-10-19/09:03:19		Hyperparameter tuning for DecisionTreeClassifier completed for fold 3
+2022-10-19/09:03:19		Start using best pipeline for DecisionTreeClassifier for transforming training and validation data for fold 3
+2022-10-19/09:03:30		Finish using best pipeline for DecisionTreeClassifier for transforming training and validation data for fold 3
+2022-10-19/09:03:30		Start evaluating model performance for DecisionTreeClassifier on validation set for fold 3
+2022-10-19/09:03:30		Evaluating model performance for DecisionTreeClassifier on validation set completed for fold 3
+2022-10-19/09:03:30		Optimized results for DecisionTreeClassifier model saved for fold 3
+2022-10-19/09:03:40		Start hyperparameter tuning for DecisionTreeClassifier for fold 4
+2022-10-19/09:07:26		Hyperparameter tuning for DecisionTreeClassifier completed for fold 4
+2022-10-19/09:07:26		Start using best pipeline for DecisionTreeClassifier for transforming training and validation data for fold 4
+2022-10-19/09:07:30		Finish using best pipeline for DecisionTreeClassifier for transforming training and validation data for fold 4
+2022-10-19/09:07:30		Start evaluating model performance for DecisionTreeClassifier on validation set for fold 4
+2022-10-19/09:07:30		Evaluating model performance for DecisionTreeClassifier on validation set completed for fold 4
+2022-10-19/09:07:30		Optimized results for DecisionTreeClassifier model saved for fold 4
+2022-10-19/09:07:40		Start hyperparameter tuning for DecisionTreeClassifier for fold 5
+2022-10-19/09:11:42		Hyperparameter tuning for DecisionTreeClassifier completed for fold 5
+2022-10-19/09:11:42		Start using best pipeline for DecisionTreeClassifier for transforming training and validation data for fold 5
+2022-10-19/09:11:45		Finish using best pipeline for DecisionTreeClassifier for transforming training and validation data for fold 5
+2022-10-19/09:11:45		Start evaluating model performance for DecisionTreeClassifier on validation set for fold 5
+2022-10-19/09:11:46		Evaluating model performance for DecisionTreeClassifier on validation set completed for fold 5
+2022-10-19/09:11:46		Optimized results for DecisionTreeClassifier model saved for fold 5
+2022-10-19/09:11:56		Average optimized results for DecisionTreeClassifier model saved
+2022-10-19/09:12:07		Start hyperparameter tuning for RandomForestClassifier for fold 1
+2022-10-19/09:16:51		Hyperparameter tuning for RandomForestClassifier completed for fold 1
+2022-10-19/09:16:51		Start using best pipeline for RandomForestClassifier for transforming training and validation data for fold 1
+2022-10-19/09:16:58		Finish using best pipeline for RandomForestClassifier for transforming training and validation data for fold 1
+2022-10-19/09:16:58		Start evaluating model performance for RandomForestClassifier on validation set for fold 1
+2022-10-19/09:16:59		Evaluating model performance for RandomForestClassifier on validation set completed for fold 1
+2022-10-19/09:16:59		Optimized results for RandomForestClassifier model saved for fold 1
+2022-10-19/09:17:09		Start hyperparameter tuning for RandomForestClassifier for fold 2
+2022-10-19/09:21:05		Hyperparameter tuning for RandomForestClassifier completed for fold 2
+2022-10-19/09:21:05		Start using best pipeline for RandomForestClassifier for transforming training and validation data for fold 2
+2022-10-19/09:21:10		Finish using best pipeline for RandomForestClassifier for transforming training and validation data for fold 2
+2022-10-19/09:21:10		Start evaluating model performance for RandomForestClassifier on validation set for fold 2
+2022-10-19/09:21:11		Evaluating model performance for RandomForestClassifier on validation set completed for fold 2
+2022-10-19/09:21:11		Optimized results for RandomForestClassifier model saved for fold 2
+2022-10-19/09:21:21		Start hyperparameter tuning for RandomForestClassifier for fold 3
+2022-10-19/09:24:37		Hyperparameter tuning for RandomForestClassifier completed for fold 3
+2022-10-19/09:24:37		Start using best pipeline for RandomForestClassifier for transforming training and validation data for fold 3
+2022-10-19/09:24:41		Finish using best pipeline for RandomForestClassifier for transforming training and validation data for fold 3
+2022-10-19/09:24:41		Start evaluating model performance for RandomForestClassifier on validation set for fold 3
+2022-10-19/09:24:42		Evaluating model performance for RandomForestClassifier on validation set completed for fold 3
+2022-10-19/09:24:42		Optimized results for RandomForestClassifier model saved for fold 3
+2022-10-19/09:24:52		Start hyperparameter tuning for RandomForestClassifier for fold 4
+2022-10-19/09:28:58		Hyperparameter tuning for RandomForestClassifier completed for fold 4
+2022-10-19/09:28:58		Start using best pipeline for RandomForestClassifier for transforming training and validation data for fold 4
+2022-10-19/09:29:07		Finish using best pipeline for RandomForestClassifier for transforming training and validation data for fold 4
+2022-10-19/09:29:07		Start evaluating model performance for RandomForestClassifier on validation set for fold 4
+2022-10-19/09:29:07		Evaluating model performance for RandomForestClassifier on validation set completed for fold 4
+2022-10-19/09:29:07		Optimized results for RandomForestClassifier model saved for fold 4
+2022-10-19/09:29:17		Start hyperparameter tuning for RandomForestClassifier for fold 5
+2022-10-19/09:33:06		Hyperparameter tuning for RandomForestClassifier completed for fold 5
+2022-10-19/09:33:06		Start using best pipeline for RandomForestClassifier for transforming training and validation data for fold 5
+2022-10-19/09:33:07		Finish using best pipeline for RandomForestClassifier for transforming training and validation data for fold 5
+2022-10-19/09:33:07		Start evaluating model performance for RandomForestClassifier on validation set for fold 5
+2022-10-19/09:33:08		Evaluating model performance for RandomForestClassifier on validation set completed for fold 5
+2022-10-19/09:33:08		Optimized results for RandomForestClassifier model saved for fold 5
+2022-10-19/09:33:18		Average optimized results for RandomForestClassifier model saved
+2022-10-19/09:33:29		Start hyperparameter tuning for ExtraTreesClassifier for fold 1
+2022-10-19/09:39:04		Hyperparameter tuning for ExtraTreesClassifier completed for fold 1
+2022-10-19/09:39:04		Start using best pipeline for ExtraTreesClassifier for transforming training and validation data for fold 1
+2022-10-19/09:39:07		Finish using best pipeline for ExtraTreesClassifier for transforming training and validation data for fold 1
+2022-10-19/09:39:07		Start evaluating model performance for ExtraTreesClassifier on validation set for fold 1
+2022-10-19/09:39:08		Evaluating model performance for ExtraTreesClassifier on validation set completed for fold 1
+2022-10-19/09:39:08		Optimized results for ExtraTreesClassifier model saved for fold 1
+2022-10-19/09:39:18		Start hyperparameter tuning for ExtraTreesClassifier for fold 2
+2022-10-19/09:43:12		Hyperparameter tuning for ExtraTreesClassifier completed for fold 2
+2022-10-19/09:43:12		Start using best pipeline for ExtraTreesClassifier for transforming training and validation data for fold 2
+2022-10-19/09:43:16		Finish using best pipeline for ExtraTreesClassifier for transforming training and validation data for fold 2
+2022-10-19/09:43:16		Start evaluating model performance for ExtraTreesClassifier on validation set for fold 2
+2022-10-19/09:43:17		Evaluating model performance for ExtraTreesClassifier on validation set completed for fold 2
+2022-10-19/09:43:17		Optimized results for ExtraTreesClassifier model saved for fold 2
+2022-10-19/09:43:27		Start hyperparameter tuning for ExtraTreesClassifier for fold 3
+2022-10-19/09:49:13		Hyperparameter tuning for ExtraTreesClassifier completed for fold 3
+2022-10-19/09:49:13		Start using best pipeline for ExtraTreesClassifier for transforming training and validation data for fold 3
+2022-10-19/09:49:14		Finish using best pipeline for ExtraTreesClassifier for transforming training and validation data for fold 3
+2022-10-19/09:49:14		Start evaluating model performance for ExtraTreesClassifier on validation set for fold 3
+2022-10-19/09:49:14		Evaluating model performance for ExtraTreesClassifier on validation set completed for fold 3
+2022-10-19/09:49:14		Optimized results for ExtraTreesClassifier model saved for fold 3
+2022-10-19/09:49:24		Start hyperparameter tuning for ExtraTreesClassifier for fold 4
+2022-10-19/09:53:26		Hyperparameter tuning for ExtraTreesClassifier completed for fold 4
+2022-10-19/09:53:26		Start using best pipeline for ExtraTreesClassifier for transforming training and validation data for fold 4
+2022-10-19/09:53:27		Finish using best pipeline for ExtraTreesClassifier for transforming training and validation data for fold 4
+2022-10-19/09:53:27		Start evaluating model performance for ExtraTreesClassifier on validation set for fold 4
+2022-10-19/09:53:28		Evaluating model performance for ExtraTreesClassifier on validation set completed for fold 4
+2022-10-19/09:53:28		Optimized results for ExtraTreesClassifier model saved for fold 4
+2022-10-19/09:53:38		Start hyperparameter tuning for ExtraTreesClassifier for fold 5
+2022-10-19/09:58:23		Hyperparameter tuning for ExtraTreesClassifier completed for fold 5
+2022-10-19/09:58:23		Start using best pipeline for ExtraTreesClassifier for transforming training and validation data for fold 5
+2022-10-19/09:58:27		Finish using best pipeline for ExtraTreesClassifier for transforming training and validation data for fold 5
+2022-10-19/09:58:27		Start evaluating model performance for ExtraTreesClassifier on validation set for fold 5
+2022-10-19/09:58:28		Evaluating model performance for ExtraTreesClassifier on validation set completed for fold 5
+2022-10-19/09:58:28		Optimized results for ExtraTreesClassifier model saved for fold 5
+2022-10-19/09:58:38		Average optimized results for ExtraTreesClassifier model saved
+2022-10-19/10:03:59		Start hyperparameter tuning for AdaBoostClassifier for fold 1
+2022-10-19/10:11:37		Hyperparameter tuning for AdaBoostClassifier completed for fold 1
+2022-10-19/10:11:37		Start using best pipeline for AdaBoostClassifier for transforming training and validation data for fold 1
+2022-10-19/10:11:46		Finish using best pipeline for AdaBoostClassifier for transforming training and validation data for fold 1
+2022-10-19/10:11:46		Start evaluating model performance for AdaBoostClassifier on validation set for fold 1
+2022-10-19/10:11:47		Evaluating model performance for AdaBoostClassifier on validation set completed for fold 1
+2022-10-19/10:11:47		Optimized results for AdaBoostClassifier model saved for fold 1
+2022-10-19/10:11:57		Start hyperparameter tuning for AdaBoostClassifier for fold 2
+2022-10-19/10:17:34		Hyperparameter tuning for AdaBoostClassifier completed for fold 2
+2022-10-19/10:17:34		Start using best pipeline for AdaBoostClassifier for transforming training and validation data for fold 2
+2022-10-19/10:17:42		Finish using best pipeline for AdaBoostClassifier for transforming training and validation data for fold 2
+2022-10-19/10:17:42		Start evaluating model performance for AdaBoostClassifier on validation set for fold 2
+2022-10-19/10:17:43		Evaluating model performance for AdaBoostClassifier on validation set completed for fold 2
+2022-10-19/10:17:43		Optimized results for AdaBoostClassifier model saved for fold 2
+2022-10-19/10:17:53		Start hyperparameter tuning for AdaBoostClassifier for fold 3
+2022-10-19/10:22:47		Hyperparameter tuning for AdaBoostClassifier completed for fold 3
+2022-10-19/10:22:47		Start using best pipeline for AdaBoostClassifier for transforming training and validation data for fold 3
+2022-10-19/10:22:52		Finish using best pipeline for AdaBoostClassifier for transforming training and validation data for fold 3
+2022-10-19/10:22:52		Start evaluating model performance for AdaBoostClassifier on validation set for fold 3
+2022-10-19/10:22:53		Evaluating model performance for AdaBoostClassifier on validation set completed for fold 3
+2022-10-19/10:22:53		Optimized results for AdaBoostClassifier model saved for fold 3
+2022-10-19/10:23:03		Start hyperparameter tuning for AdaBoostClassifier for fold 4
+2022-10-19/10:28:31		Hyperparameter tuning for AdaBoostClassifier completed for fold 4
+2022-10-19/10:28:31		Start using best pipeline for AdaBoostClassifier for transforming training and validation data for fold 4
+2022-10-19/10:28:32		Finish using best pipeline for AdaBoostClassifier for transforming training and validation data for fold 4
+2022-10-19/10:28:32		Start evaluating model performance for AdaBoostClassifier on validation set for fold 4
+2022-10-19/10:28:33		Evaluating model performance for AdaBoostClassifier on validation set completed for fold 4
+2022-10-19/10:28:33		Optimized results for AdaBoostClassifier model saved for fold 4
+2022-10-19/10:28:43		Start hyperparameter tuning for AdaBoostClassifier for fold 5
+2022-10-19/10:33:25		Hyperparameter tuning for AdaBoostClassifier completed for fold 5
+2022-10-19/10:33:25		Start using best pipeline for AdaBoostClassifier for transforming training and validation data for fold 5
+2022-10-19/10:33:30		Finish using best pipeline for AdaBoostClassifier for transforming training and validation data for fold 5
+2022-10-19/10:33:30		Start evaluating model performance for AdaBoostClassifier on validation set for fold 5
+2022-10-19/10:33:31		Evaluating model performance for AdaBoostClassifier on validation set completed for fold 5
+2022-10-19/10:33:31		Optimized results for AdaBoostClassifier model saved for fold 5
+2022-10-19/10:33:41		Average optimized results for AdaBoostClassifier model saved
+2022-10-19/10:33:52		Start hyperparameter tuning for GradientBoostingClassifier for fold 1
+2022-10-19/10:38:36		Hyperparameter tuning for GradientBoostingClassifier completed for fold 1
+2022-10-19/10:38:36		Start using best pipeline for GradientBoostingClassifier for transforming training and validation data for fold 1
+2022-10-19/10:38:41		Finish using best pipeline for GradientBoostingClassifier for transforming training and validation data for fold 1
+2022-10-19/10:38:41		Start evaluating model performance for GradientBoostingClassifier on validation set for fold 1
+2022-10-19/10:38:42		Evaluating model performance for GradientBoostingClassifier on validation set completed for fold 1
+2022-10-19/10:38:42		Optimized results for GradientBoostingClassifier model saved for fold 1
+2022-10-19/10:38:52		Start hyperparameter tuning for GradientBoostingClassifier for fold 2
+2022-10-19/10:42:59		Hyperparameter tuning for GradientBoostingClassifier completed for fold 2
+2022-10-19/10:42:59		Start using best pipeline for GradientBoostingClassifier for transforming training and validation data for fold 2
+2022-10-19/10:43:03		Finish using best pipeline for GradientBoostingClassifier for transforming training and validation data for fold 2
+2022-10-19/10:43:03		Start evaluating model performance for GradientBoostingClassifier on validation set for fold 2
+2022-10-19/10:43:03		Evaluating model performance for GradientBoostingClassifier on validation set completed for fold 2
+2022-10-19/10:43:03		Optimized results for GradientBoostingClassifier model saved for fold 2
+2022-10-19/10:43:13		Start hyperparameter tuning for GradientBoostingClassifier for fold 3
+2022-10-19/10:48:27		Hyperparameter tuning for GradientBoostingClassifier completed for fold 3
+2022-10-19/10:48:27		Start using best pipeline for GradientBoostingClassifier for transforming training and validation data for fold 3
+2022-10-19/10:48:31		Finish using best pipeline for GradientBoostingClassifier for transforming training and validation data for fold 3
+2022-10-19/10:48:31		Start evaluating model performance for GradientBoostingClassifier on validation set for fold 3
+2022-10-19/10:48:32		Evaluating model performance for GradientBoostingClassifier on validation set completed for fold 3
+2022-10-19/10:48:32		Optimized results for GradientBoostingClassifier model saved for fold 3
+2022-10-19/10:48:42		Start hyperparameter tuning for GradientBoostingClassifier for fold 4
+2022-10-19/10:54:20		Hyperparameter tuning for GradientBoostingClassifier completed for fold 4
+2022-10-19/10:54:20		Start using best pipeline for GradientBoostingClassifier for transforming training and validation data for fold 4
+2022-10-19/10:54:27		Finish using best pipeline for GradientBoostingClassifier for transforming training and validation data for fold 4
+2022-10-19/10:54:27		Start evaluating model performance for GradientBoostingClassifier on validation set for fold 4
+2022-10-19/10:54:28		Evaluating model performance for GradientBoostingClassifier on validation set completed for fold 4
+2022-10-19/10:54:28		Optimized results for GradientBoostingClassifier model saved for fold 4
+2022-10-19/10:54:38		Start hyperparameter tuning for GradientBoostingClassifier for fold 5
+2022-10-19/10:58:23		Hyperparameter tuning for GradientBoostingClassifier completed for fold 5
+2022-10-19/10:58:23		Start using best pipeline for GradientBoostingClassifier for transforming training and validation data for fold 5
+2022-10-19/10:58:30		Finish using best pipeline for GradientBoostingClassifier for transforming training and validation data for fold 5
+2022-10-19/10:58:30		Start evaluating model performance for GradientBoostingClassifier on validation set for fold 5
+2022-10-19/10:58:30		Evaluating model performance for GradientBoostingClassifier on validation set completed for fold 5
+2022-10-19/10:58:30		Optimized results for GradientBoostingClassifier model saved for fold 5
+2022-10-19/10:58:40		Average optimized results for GradientBoostingClassifier model saved
+2022-10-19/11:00:00		Start hyperparameter tuning for XGBClassifier for fold 1
+2022-10-19/11:19:26		Hyperparameter tuning for XGBClassifier completed for fold 1
+2022-10-19/11:19:26		Start using best pipeline for XGBClassifier for transforming training and validation data for fold 1
+2022-10-19/11:19:30		Finish using best pipeline for XGBClassifier for transforming training and validation data for fold 1
+2022-10-19/11:19:30		Start evaluating model performance for XGBClassifier on validation set for fold 1
+2022-10-19/11:19:41		Evaluating model performance for XGBClassifier on validation set completed for fold 1
+2022-10-19/11:19:41		Optimized results for XGBClassifier model saved for fold 1
+2022-10-19/11:19:51		Start hyperparameter tuning for XGBClassifier for fold 2
+2022-10-19/11:35:51		Hyperparameter tuning for XGBClassifier completed for fold 2
+2022-10-19/11:35:51		Start using best pipeline for XGBClassifier for transforming training and validation data for fold 2
+2022-10-19/11:35:52		Finish using best pipeline for XGBClassifier for transforming training and validation data for fold 2
+2022-10-19/11:35:52		Start evaluating model performance for XGBClassifier on validation set for fold 2
+2022-10-19/11:35:57		Evaluating model performance for XGBClassifier on validation set completed for fold 2
+2022-10-19/11:35:57		Optimized results for XGBClassifier model saved for fold 2
+2022-10-19/11:36:07		Start hyperparameter tuning for XGBClassifier for fold 3
+2022-10-19/11:47:58		Hyperparameter tuning for XGBClassifier completed for fold 3
+2022-10-19/11:47:58		Start using best pipeline for XGBClassifier for transforming training and validation data for fold 3
+2022-10-19/11:48:02		Finish using best pipeline for XGBClassifier for transforming training and validation data for fold 3
+2022-10-19/11:48:02		Start evaluating model performance for XGBClassifier on validation set for fold 3
+2022-10-19/11:48:03		Evaluating model performance for XGBClassifier on validation set completed for fold 3
+2022-10-19/11:48:03		Optimized results for XGBClassifier model saved for fold 3
+2022-10-19/11:48:13		Start hyperparameter tuning for XGBClassifier for fold 4
+2022-10-19/12:00:48		Hyperparameter tuning for XGBClassifier completed for fold 4
+2022-10-19/12:00:48		Start using best pipeline for XGBClassifier for transforming training and validation data for fold 4
+2022-10-19/12:00:52		Finish using best pipeline for XGBClassifier for transforming training and validation data for fold 4
+2022-10-19/12:00:52		Start evaluating model performance for XGBClassifier on validation set for fold 4
+2022-10-19/12:01:07		Evaluating model performance for XGBClassifier on validation set completed for fold 4
+2022-10-19/12:01:07		Optimized results for XGBClassifier model saved for fold 4
+2022-10-19/12:01:17		Start hyperparameter tuning for XGBClassifier for fold 5
+2022-10-19/12:11:34		Hyperparameter tuning for XGBClassifier completed for fold 5
+2022-10-19/12:11:34		Start using best pipeline for XGBClassifier for transforming training and validation data for fold 5
+2022-10-19/12:11:35		Finish using best pipeline for XGBClassifier for transforming training and validation data for fold 5
+2022-10-19/12:11:35		Start evaluating model performance for XGBClassifier on validation set for fold 5
+2022-10-19/12:11:46		Evaluating model performance for XGBClassifier on validation set completed for fold 5
+2022-10-19/12:11:46		Optimized results for XGBClassifier model saved for fold 5
+2022-10-19/12:11:56		Average optimized results for XGBClassifier model saved
+2022-10-19/12:12:07		Start hyperparameter tuning for LGBMClassifier for fold 1
+2022-10-19/12:21:34		Hyperparameter tuning for LGBMClassifier completed for fold 1
+2022-10-19/12:21:34		Start using best pipeline for LGBMClassifier for transforming training and validation data for fold 1
+2022-10-19/12:21:57		Finish using best pipeline for LGBMClassifier for transforming training and validation data for fold 1
+2022-10-19/12:21:57		Start evaluating model performance for LGBMClassifier on validation set for fold 1
+2022-10-19/12:21:58		Evaluating model performance for LGBMClassifier on validation set completed for fold 1
+2022-10-19/12:21:59		Optimized results for LGBMClassifier model saved for fold 1
+2022-10-19/12:22:09		Start hyperparameter tuning for LGBMClassifier for fold 2
+2022-10-19/12:28:59		Hyperparameter tuning for LGBMClassifier completed for fold 2
+2022-10-19/12:28:59		Start using best pipeline for LGBMClassifier for transforming training and validation data for fold 2
+2022-10-19/12:29:01		Finish using best pipeline for LGBMClassifier for transforming training and validation data for fold 2
+2022-10-19/12:29:01		Start evaluating model performance for LGBMClassifier on validation set for fold 2
+2022-10-19/12:29:02		Evaluating model performance for LGBMClassifier on validation set completed for fold 2
+2022-10-19/12:29:02		Optimized results for LGBMClassifier model saved for fold 2
+2022-10-19/12:29:12		Start hyperparameter tuning for LGBMClassifier for fold 3
+2022-10-19/12:38:58		Hyperparameter tuning for LGBMClassifier completed for fold 3
+2022-10-19/12:38:58		Start using best pipeline for LGBMClassifier for transforming training and validation data for fold 3
+2022-10-19/12:39:25		Finish using best pipeline for LGBMClassifier for transforming training and validation data for fold 3
+2022-10-19/12:39:25		Start evaluating model performance for LGBMClassifier on validation set for fold 3
+2022-10-19/12:39:27		Evaluating model performance for LGBMClassifier on validation set completed for fold 3
+2022-10-19/12:39:27		Optimized results for LGBMClassifier model saved for fold 3
+2022-10-19/12:39:37		Start hyperparameter tuning for LGBMClassifier for fold 4
+2022-10-19/12:50:50		Hyperparameter tuning for LGBMClassifier completed for fold 4
+2022-10-19/12:50:50		Start using best pipeline for LGBMClassifier for transforming training and validation data for fold 4
+2022-10-19/12:51:19		Finish using best pipeline for LGBMClassifier for transforming training and validation data for fold 4
+2022-10-19/12:51:19		Start evaluating model performance for LGBMClassifier on validation set for fold 4
+2022-10-19/12:51:21		Evaluating model performance for LGBMClassifier on validation set completed for fold 4
+2022-10-19/12:51:21		Optimized results for LGBMClassifier model saved for fold 4
+2022-10-19/12:51:31		Start hyperparameter tuning for LGBMClassifier for fold 5
+2022-10-19/12:57:22		Hyperparameter tuning for LGBMClassifier completed for fold 5
+2022-10-19/12:57:22		Start using best pipeline for LGBMClassifier for transforming training and validation data for fold 5
+2022-10-19/12:57:27		Finish using best pipeline for LGBMClassifier for transforming training and validation data for fold 5
+2022-10-19/12:57:27		Start evaluating model performance for LGBMClassifier on validation set for fold 5
+2022-10-19/12:57:29		Evaluating model performance for LGBMClassifier on validation set completed for fold 5
+2022-10-19/12:57:29		Optimized results for LGBMClassifier model saved for fold 5
+2022-10-19/12:57:39		Average optimized results for LGBMClassifier model saved
+2022-10-19/12:57:50		Start hyperparameter tuning for CatBoostClassifier for fold 1
+2022-10-19/13:09:11		Hyperparameter tuning for CatBoostClassifier completed for fold 1
+2022-10-19/13:09:11		Start using best pipeline for CatBoostClassifier for transforming training and validation data for fold 1
+2022-10-19/13:09:24		Finish using best pipeline for CatBoostClassifier for transforming training and validation data for fold 1
+2022-10-19/13:09:24		Start evaluating model performance for CatBoostClassifier on validation set for fold 1
+2022-10-19/13:09:26		Evaluating model performance for CatBoostClassifier on validation set completed for fold 1
+2022-10-19/13:09:26		Optimized results for CatBoostClassifier model saved for fold 1
+2022-10-19/13:09:36		Start hyperparameter tuning for CatBoostClassifier for fold 2
+2022-10-19/13:22:05		Hyperparameter tuning for CatBoostClassifier completed for fold 2
+2022-10-19/13:22:05		Start using best pipeline for CatBoostClassifier for transforming training and validation data for fold 2
+2022-10-19/13:22:18		Finish using best pipeline for CatBoostClassifier for transforming training and validation data for fold 2
+2022-10-19/13:22:18		Start evaluating model performance for CatBoostClassifier on validation set for fold 2
+2022-10-19/13:22:21		Evaluating model performance for CatBoostClassifier on validation set completed for fold 2
+2022-10-19/13:22:21		Optimized results for CatBoostClassifier model saved for fold 2
+2022-10-19/13:22:31		Start hyperparameter tuning for CatBoostClassifier for fold 3
+2022-10-19/13:38:17		Hyperparameter tuning for CatBoostClassifier completed for fold 3
+2022-10-19/13:38:17		Start using best pipeline for CatBoostClassifier for transforming training and validation data for fold 3
+2022-10-19/13:38:22		Finish using best pipeline for CatBoostClassifier for transforming training and validation data for fold 3
+2022-10-19/13:38:22		Start evaluating model performance for CatBoostClassifier on validation set for fold 3
+2022-10-19/13:38:27		Evaluating model performance for CatBoostClassifier on validation set completed for fold 3
+2022-10-19/13:38:27		Optimized results for CatBoostClassifier model saved for fold 3
+2022-10-19/13:38:37		Start hyperparameter tuning for CatBoostClassifier for fold 4
+2022-10-19/13:50:45		Hyperparameter tuning for CatBoostClassifier completed for fold 4
+2022-10-19/13:50:45		Start using best pipeline for CatBoostClassifier for transforming training and validation data for fold 4
+2022-10-19/13:50:49		Finish using best pipeline for CatBoostClassifier for transforming training and validation data for fold 4
+2022-10-19/13:50:49		Start evaluating model performance for CatBoostClassifier on validation set for fold 4
+2022-10-19/13:50:52		Evaluating model performance for CatBoostClassifier on validation set completed for fold 4
+2022-10-19/13:50:52		Optimized results for CatBoostClassifier model saved for fold 4
+2022-10-19/13:51:02		Start hyperparameter tuning for CatBoostClassifier for fold 5
+2022-10-19/14:02:57		Hyperparameter tuning for CatBoostClassifier completed for fold 5
+2022-10-19/14:02:57		Start using best pipeline for CatBoostClassifier for transforming training and validation data for fold 5
+2022-10-19/14:03:03		Finish using best pipeline for CatBoostClassifier for transforming training and validation data for fold 5
+2022-10-19/14:03:03		Start evaluating model performance for CatBoostClassifier on validation set for fold 5
+2022-10-19/14:03:05		Evaluating model performance for CatBoostClassifier on validation set completed for fold 5
+2022-10-19/14:03:05		Optimized results for CatBoostClassifier model saved for fold 5
+2022-10-19/14:03:15		Average optimized results for CatBoostClassifier model saved
+2022-10-19/14:03:26		Best model identified based on balanced accuracy score is ExtraTreesClassifier with the following test score: 0.373 (0.0425)
+2022-10-19/14:03:26		Best model identified based on precision score is AdaBoostClassifier with the following test score: 0.379 (0.0978)
+2022-10-19/14:03:26		Best model identified based on recall score is ExtraTreesClassifier with the following test score: 0.373 (0.0425)
+2022-10-19/14:03:26		Best model identified based on f1 score is LinearSVC with the following test score: 0.3293 (0.0265)
+2022-10-19/14:03:26		Best model identified based on matthews correlation coefficient is ExtraTreesClassifier with the following test score: 0.1776 (0.0613)
+2022-10-19/14:03:26		Finish process of model selection
+2022-10-19/17:29:00		Start performing hyperparameter tuning on best model identified overall: LinearSVC
+2022-10-19/17:29:00		Start final model training on all data for LinearSVC
+2022-10-19/17:29:00		Start hyperparameter tuning for LinearSVC for fold overall
+2022-10-19/17:40:23		Hyperparameter tuning for LinearSVC completed for fold overall
+2022-10-19/17:40:24		Start using best pipeline for LinearSVC for transforming training and validation data for fold overall
+2022-10-19/17:40:35		Finish using best pipeline for LinearSVC for transforming training and validation data for fold overall
+2022-10-19/17:40:35		Start evaluating model performance for LinearSVC on validation set for fold overall
+2022-10-19/17:40:58		Finish final model training on all data for LinearSVC
+2022-10-19/17:40:58		Finish performing hyperparameter tuning on best model identified overall: LinearSVC
