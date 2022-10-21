@@ -9,7 +9,7 @@ Ever since the start of the pandemic back in 2020, the government expects more l
 
 For this project, the main goal is to deploy initial classification models that help to monitor a child’s wellbeing status during the pandemic period. By identifying factors that influence the status of a child’s wellbeing through a customized survey, the government will be able to make more informed decisions/new policies that reduce the risk of a child having behavioral or emotional difficulties or both.
 
-Dataset is provided in .json format by client under Training_Batch_Files folder for model training.
+Dataset is provided in .json format by client under Training_Batch_Files folder for model training. (not included in this repository due to data confidentiality reasons)
 
 For model prediction, a web API is used (created using StreamLit) for user input. Note that results generated from model prediction along with user inputs can be stored in various formats (i.e. in CSV file format or another database).
 
@@ -34,13 +34,17 @@ For model prediction, a web API is used (created using StreamLit) for user input
 - [Project Instructions (Heroku with Docker)](#project-instructions-heroku-with-docker)
 - [Initial Data Cleaning and Feature Engineering](#initial-data-cleaning-and-feature-engineering)
 - [Machine Learning Pipelines Configuration](#machine-learning-pipelines-configuration)
-  - [Handling missing values](#i-handling-missing-values)
-  - [Handling imbalanced data](#ii-handling-imbalanced-data)
-  - [Handling outliers by capping at extreme values](#iii-handling-outliers-by-capping-at-extreme-values)
-  - [Gaussian transformation on non-gaussian variables](#iv-gaussian-transformation-on-non-gaussian-variables)
-  - [Feature Scaling](#v-feature-scaling)
-  - [Feature Selection](#vi-feature-selection)
-  - [Cluster Feature representation](#vii-cluster-feature-representation)
+  - [Handling imbalanced data](#i-handling-imbalanced-data)
+  - [Feature Engineering](#ii-feature-engineering)
+  - [Encoding "interval" features](#iii-encoding-interval-features)
+  - [Encoding "binary" features](#iv-encoding-binary-features)
+  - [Encoding "ordinal" features with different magnitudes "for certain"](#v-encoding-ordinal-features-with-different-magnitudes-for-certain)
+  - [Encoding features with rare categories](#vi-encoding-features-with-rare-categories)
+  - [Encoding "nominal" and "ordinal" features with uncertainty in magnitude difference](#vii-encoding-nominal-and-ordinal-features-with-uncertainty-in-magnitude-difference)
+  - [Encoding "time-related" features](#viii-encoding-time-related-features)  
+  - [Feature Scaling](#x-feature-scaling)
+  - [Feature Selection](#xi-feature-selection)
+  - [Cluster Feature representation](#xii-cluster-feature-representation)
 - [Legality](#legality)
 
 ## Code and Resources Used
@@ -66,6 +70,7 @@ For model prediction, a web API is used (created using StreamLit) for user input
 - **Yellowbrick documentation**: https://www.scikit-yb.org/en/latest/
 - **Scipy documentation**: https://docs.scipy.org/doc/scipy/
 - **Streamlit documentation**: https://docs.streamlit.io/
+- **Blueprint for encoding categorical variables**: https://miro.medium.com/max/1400/1*gXKCiYdrIESmcbte2AtNeg.jpeg
 
 ## Model Training Setting
 ---
@@ -303,7 +308,7 @@ The following diagram below summarizes the structure for this project:
 
 ![image](https://user-images.githubusercontent.com/34255556/195505246-e18ab2c2-e34b-4145-8f21-1b52ff8823af.png)
 
-Note that all steps mentioned above have been logged accordingly for future reference and easy maintenance, which are stored in <b>Training_Logs</b> and <b>Prediction_Logs</b> folders. Any bad quality data identified for model training and model prediction will be archived accordingly in <b>Archive_Training_Data</b> and <b>Archive_Prediction_Data</b> folders.
+Note that all steps mentioned above have been logged accordingly for future reference and easy maintenance, which are stored in <b>Training_Logs</b> folder.
 
 ## Project Folder Structure
 ---
@@ -316,14 +321,14 @@ The following points below summarizes the use of every file/folder available for
 6. Training_Data_FromDB: Stores compiled data from SQL database for model training
 7. Training_Logs: Stores logging information from model training for future debugging and maintenance
 8. Dockerfile: Additional file for Docker project deployment
-9. main.py: Main file for program execution
-10. README.md: Details summary of project for presentation
-11. requirements.txt: List of Python packages to install for project deployment
-12. setup.py : Script for installing relevant python packages for project deployment
-13. Docker_env: Folder that contains files that are required for project deployment without logging files or results.
-14. BorutaShap.py: Modified python script with some changes to coding for performing feature selection based on shap values on test set
-15. _tree.py: Modified python script to include AdaBoost Classifier as part of the set of models that support Shap library.
-
+9. README.md: Details summary of project for presentation
+10. requirements.txt: List of Python packages to install for project deployment
+11. setup.py : Script for installing relevant python packages for project deployment
+12. Docker_env: Folder that contains files that are required for model deployment without logging files or results. (Note that training_pipeline.py file is not included in here)
+13. BorutaShap.py: Modified python script with some changes to coding for performing feature selection based on shap values on test set
+14. _tree.py: Modified python script to include AdaBoost Classifier as part of the set of models that support Shap library.
+15. training_pipeline.py: Main python file for running training pipeline process.
+16. prediction_pipeline.py: Streamlit API file for performing model prediction from best model identified for deployment.
 
 The following sections below explains the three main approaches that can be used for deployment in this project:
 1. <b>Docker</b>
@@ -527,26 +532,26 @@ streamlit run main.py
 ---
 After performing Exploratory Data Analysis, the following steps are performed initially on the entire dataset before performing further data preprocessing and model training:
 
-i) Removing "Wafer" column, which is an ID representation of a given row
+i) Filter data where respondent provides permission to use questionnaire (Use_questionnaire feature)
 
-ii) Checking for duplicated rows and remove if exist
+ii) Derive target variable based on features related to Me and My Feelings questionnaire.
 
-iii) Split dataset into features and target labels with values of -1 replaced as 0 (non-faulty).
+iii) Reformat time related features (i.e Timestamp, Birthdate, Sleeptime_ytd and Awaketime_today) to appropriate form
 
-iv) Adding missing indicator (binary value) for all continuous features
+iv) Removing list of irrelevant colummns identified from dataset (i.e. unique identifier features, features related to target variable to prevent target leakage and LSOA related features that have direct one to one relationship with WIMD related features)
 
-v) Adding zero value indicator (binary value) for all continuous features with more than 1% having zero values
+v) Checking for duplicated rows and remove if exist
 
-vi) Remove all features that have low variance (less than 2%)
+vi) Split dataset into features and target labels.
 
-vii) Save reduced set of features and target values into 2 different CSV files (X.csv and y.csv) for further data preprocessing with pipelines to reduce data leakage.
+vii) Perform missing imputation on categorical variables based on highest frequency for every category.
+
+viii) Save reduced set of features and target values into 2 different CSV files (X.csv and y.csv) for further data preprocessing with pipelines to reduce data leakage.
 
 For more details of which features have been initially removed from the dataset, refer to the following CSV file: <b>Columns_Drop_from_Original.csv</b>
 
-In addition, the following pickle files (with self-explanatory names) have been created inside Intermediate_Train_Results folder during this stage which will be used later on during data preprocessing on test data batch:
-- <b>AddMissingIndicator.pkl</b>
-- <b>Dropconstantfeatures.pkl</b>
-- <b>ZeroIndicator.pkl</b>
+In addition, the following pickle files (with self-explanatory names) have been created inside Intermediate_Train_Results folder during this stage which may be used later on during data preprocessing on test data:
+- <b>CategoryImputer.pkl</b>
 
 ## Machine Learning Pipelines Configuration
 ---
@@ -554,64 +559,113 @@ While data preprocessing steps can be done on the entire dataset before model tr
 
 The sections below summarizes the details of Machine Learning pipelines with various variations in steps:
 
-#### i. Handling missing values
-Most machine learning models do not automatically handle missing values (with the exception of XGBoost, LightGBM and CatBoost). Therefore, missing values need appropriate handling first before subsequent steps of the pipeline can be executed.
-
-For this project, missing values are handled using the following methods:
-
-- Simple Mean Imputation: For gaussian features that have data missing completely at random (MCAR)
-- Simple Median Imputation: For non gaussian features that have data missing completely at random (MCAR)
-- End Tail Mean Imputation: For gaussian features that have data missing at random (MAR)
-- End Tail Median Imputation: For non gaussian features that have data missing at random (MAR)
-
-Note that skewness of features is used to distinguish between gaussian and non-gaussian features. On the other hand, number of features with low spearman correlation (between -0.4 and 0.4) of missingness with other features is used to distinguish between MCAR (All features) and MAR (Not all features).
-
-For XGBoost, LightGBM and CatBoost, the presence of this pipeline step is also tested as part of hyperparameter tuning within nested cross validation.
-
-#### ii. Handling imbalanced data
-While most machine learning models have hyperparameters that allow adjustment of <b>class weights</b> for classification, an alternative solution to handle imbalanced data is to use oversampling or undersampling or combination of both oversampling and undersampling methods.
+#### i. Handling imbalanced data
+While most machine learning models have hyperparameters that allow adjustment of <b>class weights</b> for classification, an alternative solution to handle imbalanced data is to use oversampling method.
 
 For this project, the following methods of handling imbalanced data are tested:
 
-- SMOTETomek: Combine over (SMOTEENC) and under sampling using SMOTE and Tomek links.
-- SMOTEENN: Combine over (SMOTEENC) and under sampling using SMOTE and Edited Nearest Neighbours.
-- SMOTEENC: Synthetic Minority Over-sampling Technique for Nominal and Continuous data.
+- SMOTEN: Synthetic Minority Over-sampling Technique for Nominal data.
 - No oversampling or undersampling required
 
-For XGBoost, LightGBM and CatBoost, if handling missing values are not included as part of the pipeline, this step of the pipeline will be discarded.
+Note that this dataset do not contain continuous variables, thus the only suitable methods available for handling imbalanced data is either using SMOTEN for oversampling or using class weights hyperparameter.
 
-#### iii. Handling outliers by capping at extreme values
-Machine learning models like Logistic Regression, Linear SVC, KNN and Gaussian Naive Bayes are highly sensitive to outliers, which may impact model performance. For those 4 types of models, the presence of this step of the pipeline by capping outliers at extreme ends of gaussian/non-gaussian distribution will be tested accordingly using Winsorizer function from feature-engine library.
+#### ii. Feature Engineering
+The following features are derived after handling imbalanced data if relevant:
+- Age (Difference between Timestamp and Birth_Date)
+- Hours slept (Difference between Awaketime_today and Sleeptime_ytd)
+- Datetime features (i.e. year, month, quarter, week, day_of_week, day_of_month, day_of_year, hour and minute) from Timestamp, Birth_Date, Awaketime_today and Sleeptime_ytd (using DatetimeFeatures function from feature-engine library)
+- Number of methods of keep in touch (based on Method_of_keepintouch feature)
+- Number of types of play places (based on Type_of_play_places feature)
+- Number of breakfast food yesterday (based on Breakfast_ytd feature)
 
-Note that Anderson test is used to identify gaussian vs non-gaussian distribution in this pipeline step.
+#### iii. Encoding "interval" features
+Features that are identifed as interval data types have equal magnitudes between different values. These features can be encoded directly using custom <b>label encoding (from 0)</b>:
+- Study_Year
+- Safety_toplay_scale
+- Health_scale
+- School_scale
+- Family_scale
+- Friends_scale
+- Looks_scale
+- Life_scale
+- WIMD_2019_Rank
+- WIMD_2019_Decile
+- WIMD_2019_Quintile
+- WIMD_2019_Quartile
 
-#### iv. Gaussian transformation on non-gaussian variables
-In Machine Learning, several machine learning models like Logistic Regression and Gaussian Naive Bayes tends to perform best when data follows the assumption of normal distribution. The following types of gaussian transformation are tested on non-gaussian features and the gaussian transformation that works best on given feature (the lowest test statistic that is smaller than 5% critical value) will be used for gaussian transformation: 
+#### iv. Encoding "binary" features
+Features that are identified as binary data types only require simple encoding (1 vs 0):
+- Read_Info_Sheet
+- School_Health_Records
+- Other_children_inhouse
+- Easywalk_topark
+- Easywalk_somewhere
+- Garden
+- Keep_in_touch_family_outside_household
+- Keep_in_touch_friends
+- Sleeptime_ytd_minute
+- Awaketime_today_minute
 
-- Logarithmic
-- Reciprocal
-- Square Root
-- Yeo Johnson
-- Square
-- Quantile (Normal distribution)
+In addition, these following features contain multiple values which can also be split into individual values in binary form:
+- Method_of_keepintouch (Contact_by_phone, Contact_by_visit, Contact_by_social_media, Contact_by_game)
+- Type_of_play_places (Play_in_house, Play_in_garden, Play_in_grass_area, Play_in_bushes, Play_in_woods, Play_in_field, Play_in_street, Play_in_playground, Play_in_bike_or_park, Play_near_water) * Only top 10 categories are used
+- Breakfast_ytd (Bread_Brk, Sugary_Cereal_Brk, Healthy_Cereal_Brk, Fruits_Brk, Yogurt_Brk, Nothing_Brk, Cooked_Breakfast_Brk, Snacks_Brk) * Only top 8 categories are used
 
-Note that Anderson test is used to identify whether a given gaussian transformation technique successfully converts a non-gaussian feature to a gaussian feature.
+#### v. Encoding "ordinal" features with different magnitudes "for certain"
+For features that are identified as ordinal data types with high certainty of categories having different magnitudes can be encoded using one of the following contrast methods:
+- Backward Difference Encoder
+- Polynomial Encoder
+- Sum Encoder
+- Helmert Encoder
 
-#### v. Feature Scaling
-Feature scaling is only essential in some machine learning models like Logistic Regression, Linear SVC and KNN for faster convergence and to prevent misinterpretation of one feature significantly more important than other features.
+These following features will be encoded using contrast methods, since these features clearly show different magnitudes:
+- Fruitveg_ytd
+- Number_people_household
+- Sports_in_week 
+- Internet_in_week
+- Tired_in_week
+- Concentrate_in_week
+- Softdrink_in_week
+- Sugarsnack_in_week
+- Takeawayfood_in_week
 
-For this project, the following methods of feature scaling are tested:
+#### vi. Encoding features with rare categories
+For features that contain many unique categories, these features may have categories that are considered to be "rare" due to low frequency. To reduce the cardinality of these features, <b>RareLabelEncoder</b> from feature-engine library is used.
 
-- Standard Scaler
-- MinMax Scaler
-- Robust Scaler
-- Standard Scaler for gaussian features + MinMax Scaler for non-gaussian features
+#### vii. Encoding "nominal" and "ordinal" features with uncertainty in magnitude difference
+The following list of features are ordinal that may or may not have different magnitudes between values:
+- Doingwell_schoolwork
+- Lots_of_choices_important
+- Lots_of_things_good_at
+- Feel_partof_community
+- Outdoorplay_freq
+- Enoughtime_toplay
+- Play_inall_places
 
-#### vi. Feature Selection
+<b>Note that the features listed above are encoded using label encoding (from 0 in order of importance) as intermediate step before further data encoding.</b>
+
+The following list of features are identified as nominal:
+- Gender
+- Going_school
+- Homespace_relax
+- Method_of_keepintouch
+- Breakfast_ytd
+- Type_of_play_places
+
+<b>For all the features mentioned in this section, features are encoded using either One Hot encoding (for non-tree based models) or CatBoost encoding (for tree-based models).</b>
+
+#### viii. Encoding "time-related" features
+All time-related features that are derived from Timestamp, Birth_Date, Sleeptime_ytd and Awaketime_today are encoded using either CyclicalFeatures (for non-tree based models) function from feature-engine library or CatBoost encoding (for tree-based models).
+
+Note that while One Hot encoding is the most popular approach for categorical data encoding, time-related features are usually cyclical in nature such that performing one hot encoding on time related features does not capture the cyclical component.
+
+#### x. Feature Scaling
+Feature scaling is only essential in some machine learning models like Logistic Regression, Linear SVC and KNN for faster convergence and to prevent misinterpretation of one feature significantly more important than other features. For this project, MinMax scaler is used since this dataset only contains categorical variables.
+
+#### xi. Feature Selection
 Given the current dataset has very large number of features, performing feature selection is essential for simplifying the machine learning model, reducing model training time and to reduce risk of model overfitting.
 
-For this project, the presence of removing highly correlated variables (>0.8) based on spearman correlation is tested (except for FeatureWiz method) along with the following methods of feature selection with pipelines that handle missing values:
-
+For this project, the following methods of feature selection are tested:
 - Mutual Information
 - ANOVA
 - Feature Importance using Extra Trees Classifier
@@ -619,9 +673,7 @@ For this project, the presence of removing highly correlated variables (>0.8) ba
 - BorutaShap (Default base learner: Random Forest Classifier)
 - FeatureWiz (SULOV (Searching for Uncorrelated List of Variables) + Recursive Feature Elimination with XGBoost Classifier)
 
-For pipelines (XGBoost, LightGBM and CatBoost) that do not involve handling missing values, only feature selection method tested is based on feature importance for respective base learners.
-
-#### vii. Cluster Feature representation
+#### xii. Cluster Feature representation
 After selecting the best features from feature selection, an additional step that can be tested involves representing distance between various points and identified cluster point as a feature (cluster_distance) for model training. From the following research paper (https://link.springer.com/content/pdf/10.1007/s10115-021-01572-6.pdf) written by Maciej Piernik and Tadeusz Morzy in 2021, both authors concluded the following points that will be applied to this project:
 
 -  Adding cluster-generated features may improve quality of classification models (linear classifiers like Logistic Regression and Linear SVC), with extra caution required for non-linear classifiers like K Neighbors Classifier and random forest approaches.
