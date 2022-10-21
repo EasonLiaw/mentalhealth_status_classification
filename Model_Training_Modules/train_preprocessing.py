@@ -234,7 +234,7 @@ class train_Preprocessor:
             data['WIMD_2019_Rank'] = data['WIMD_2019_Rank'].apply(
                 lambda x: np.nan if x=='not found' else x)
             imputer_missing = CategoricalImputer(
-                imputation_method='frequent',ignore_format=True,variables=X.columns[data.isnull().sum() > 0].tolist())
+                imputation_method='frequent',ignore_format=True,variables=data.columns[data.isnull().sum() > 0].tolist())
             data = imputer_missing.fit_transform(data)
             joblib.dump(
                 imputer_missing,open(self.result_dir + f'CategoryImputer.pkl','wb'))

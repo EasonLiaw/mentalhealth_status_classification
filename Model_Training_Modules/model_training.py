@@ -997,7 +997,8 @@ class model_trainer:
             self.file_object, f"Finish final model training on all data for {type(clf).__name__}")
         
 
-    def model_selection(self, input, output, num_trials, folderpath):
+    def model_selection(
+            self, input, output, num_trials, folderpath, model_names):
         '''
             Method Name: model_selection
             Description: This method performs model algorithm selection using Stratified Nested Cross Validation (5-fold cv outer loop for model evaluation and 3-fold cv inner loop for hyperparameter tuning)
@@ -1015,12 +1016,13 @@ class model_trainer:
         self.output = output
         self.num_trials = num_trials
         self.folderpath = folderpath
+        self.model_names = model_names
         optuna.logging.set_verbosity(optuna.logging.DEBUG)
         input_data = self.input.astype('object').copy()
         output_data = self.output['Wellbeing_Category_WMS'].copy()
-        for selector in self.optuna_selectors.values():
-            obj = selector['obj']
-            clf = selector['clf']
+        for selector in self.model_names:
+            obj = self.optuna_selectors[selector]['obj']
+            clf = self.optuna_selectors[selector]['clf']
             path = os.path.join(self.folderpath, type(clf).__name__)
             if not os.path.exists(path):
                 os.mkdir(path)
@@ -1044,7 +1046,7 @@ class model_trainer:
 
 
     def final_model_tuning(
-            self, input_data, output_data, num_trials, folderpath):
+            self, input_data, output_data, num_trials, folderpath, model_number):
         '''
             Method Name: final_model_tuning
             Description: This method performs final model training from best model algorithm identified on entire dataset using Stratified 3-fold cross validation.
@@ -1060,25 +1062,11 @@ class model_trainer:
         self.output_data = output_data
         self.num_trials = num_trials
         self.folderpath = folderpath
+        self.model_number = model_number
         optuna.logging.set_verbosity(optuna.logging.DEBUG)
         try:
-            model_number = int(input("""
-    Select one of the following models to use for model deployment: 
-    [1] Logistic Regression
-    [2] Linear SVC
-    [3] K Neighbors Classifier
-    [4] Gaussian Naive Bayes
-    [5] Decision Tree Classifier
-    [6] Random Forest Classifier
-    [7] Extra Trees Classifier
-    [8] Ada Boost Classifier
-    [9] Gradient Boost Classifier
-    [10] XGBoost Classifier
-    [11] LGBM Classifier
-    [12] CatBoost Classifier
-            """))
             model_options = {1: 'LogisticRegression', 2: 'LinearSVC', 3: 'KNeighborsClassifier', 4: 'GaussianNB', 5: 'DecisionTreeClassifier', 6: 'RandomForestClassifier', 7: 'ExtraTreesClassifier', 8: 'AdaBoostClassifier', 9: 'GradientBoostingClassifier', 10: 'XGBClassifier', 11: 'LGBMClassifier', 12: 'CatBoostClassifier'}
-            best_model_name = model_options[model_number]
+            best_model_name = model_options[self.model_number]
         except:
             print(
                 'Please insert a valid number of choice for model deployment.')
