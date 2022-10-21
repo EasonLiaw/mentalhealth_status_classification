@@ -112,7 +112,7 @@ All plots generated from this section can be found in Intermediate_Train_Results
 #### i. Basic metadata of dataset
 On initial inspection, the current dataset used in this project has a total of 71 features. Both "_id" and "ID.1 features represent unique identifier of a given record and the remaining features have  mix of "float", "int" and "object" data types. Upon closer inspection on data dictionary, there are several date-time related features where further information can be extracted and remaining features are considered as categorical variables.
 
-Given that there is no target variable, this project requires creating target variable manually (Wellbeing_Category_WMS - mainly based on variables related to Me and My Feelings Questionairre. More details can be found in the coding file labeled "train preprocessing.py")
+Given that there is no target variable, this project requires creating target variable manually (Wellbeing_Category_WMS - mainly based on variables related to Me and My Feelings Questionnaire. More details can be found in the coding file labeled "train preprocessing.py")
 
 ![Target_Class_Distribution](https://user-images.githubusercontent.com/34255556/196934993-fc9bbe23-81c3-459c-8263-2ff26a51b31f.png)
 
