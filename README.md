@@ -52,7 +52,7 @@ For model prediction, a web API is used (created using StreamLit) for user input
 - **Python Version** : 3.10.0
 - **Packages** : borutashap, feature-engine, featurewiz, imbalanced-learn, joblib, catboost, lightgbm, matplotlib, pymongo, numpy, optuna, pandas, plotly, scikit-learn, scipy, seaborn, shap, streamlit, tqdm, xgboost, yellowbrick
 - **Dataset source** : From 360DIGITMG (For confidentiality reasons, dataset is not included here)
-- **Database**: MongoDB
+- **Database**: MongoDB Atlas
 - **MongoDB documentation**: https://www.mongodb.com/docs/
 - **Optuna documentation** : https://optuna.readthedocs.io/en/stable/
 - **Feature Engine documentation** : https://feature-engine.readthedocs.io/en/latest/
@@ -306,7 +306,7 @@ Note that an alternative version of this methodology, known as CRISP-ML(Q) (Cros
 ---
 The following diagram below summarizes the structure for this project:
 
-![image](https://user-images.githubusercontent.com/34255556/195505246-e18ab2c2-e34b-4145-8f21-1b52ff8823af.png)
+![image](https://user-images.githubusercontent.com/34255556/197318004-f2b09e1c-af92-4fee-9747-ab0fbc11961d.png)
 
 Note that all steps mentioned above have been logged accordingly for future reference and easy maintenance, which are stored in <b>Training_Logs</b> folder.
 
