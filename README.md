@@ -700,4 +700,4 @@ After selecting the best features from feature selection, an additional step tha
 
 ## Legality
 ---
-This is a personal project made for non-commercial uses ONLY. This project will not be used to generate any promotional or monetary value for me, the creator, or the user.
+This is an internship project made with 360DIGITMG for non-commercial uses ONLY. This project will not be used to generate any promotional or monetary value for me, the creator, or the user.
