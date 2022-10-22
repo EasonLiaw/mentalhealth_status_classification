@@ -324,13 +324,46 @@ The following points below summarizes the use of every file/folder available for
 9. README.md: Details summary of project for presentation
 10. requirements.txt: List of Python packages to install for project deployment
 11. setup.py : Script for installing relevant python packages for project deployment
-12. Docker_env: Folder that contains files that are required for model deployment without logging files or results. (Note that training_pipeline.py file is not included in here)
+12. Docker_env: Folder that contains files that are required for model deployment without logging files or results.
 13. BorutaShap.py: Modified python script with some changes to coding for performing feature selection based on shap values on test set
 14. _tree.py: Modified python script to include AdaBoost Classifier as part of the set of models that support Shap library.
-15. training_pipeline.py: Main python file for running training pipeline process.
-16. prediction_pipeline.py: Streamlit API file for performing model prediction from best model identified for deployment.
+15. pipeline_api.py: Main python file for running training pipeline process and performing model prediction.
 
-The following sections below explains the three main approaches that can be used for deployment in this project:
+## MongoDB Atlas Setup
+---
+
+![image](https://user-images.githubusercontent.com/34255556/197315546-b60b36b7-10e2-4b50-9eff-ae62ed44b17d.png)
+
+For this project, data provided by the client in JSON format will be stored in MongoDB Atlas, which is a cloud database platform specially for MongoDB.
+
+The following steps below shows the setup of MongoDB Atlas:
+
+1. Register for a new MongoDB Atlas account for free using the following link: https://www.mongodb.com/cloud/atlas/register
+2. After login, create a new database cluster (Shared option) and select the cloud provider and region of your choice:
+
+<img src = "https://user-images.githubusercontent.com/34255556/197315198-8a65d44a-9e75-4d65-9de4-f3c10748b066.png" width="600">
+
+3. Go to Database Access tab under Security section and add a new database user as follows:
+
+<img src = "https://user-images.githubusercontent.com/34255556/197315308-c6c25139-528f-40f4-a3f1-55a6a269df68.png" width="600">
+
+- Keep a record of username and password created for future use.
+
+4. Go to Database tab under Deployment section and click on Connect button:
+
+![image](https://user-images.githubusercontent.com/34255556/197315396-710bae00-c75d-4f69-b267-0ee9e217c819.png)
+
+5. Select "Connect your application" option:
+
+<img src = "https://user-images.githubusercontent.com/34255556/197315427-79eaf258-0ac7-4762-b3d5-4856d8474759.png" width="600">
+
+6. <b>Important: Make a note of the connection string and replace username and password by its values from step 3.</b>
+
+![image](https://user-images.githubusercontent.com/34255556/197315449-c077c899-97ed-4ce7-9d52-25c79bfaa217.png)
+
+- Note that this connection string is required for connecting our API with MongoDB atlas.
+
+The following sections below explains the three main approaches that can be used for deployment in this project after setting up MongoDB Atlas:
 1. <b>Docker</b>
 2. <b>Cloud Platform (Heroku with Docker)</b>
 3. <b>Local environment</b>
@@ -351,62 +384,49 @@ Deploying this project on Docker allows for portability between different enviro
 Docker Desktop needs to be installed into your local system (https://www.docker.com/products/docker-desktop/), before proceeding with the following steps:
 
 1. Download and extract the zip file from this github repository into your local machine system.
-<img src="https://user-images.githubusercontent.com/34255556/195367439-1dd10dd8-5e22-412e-8620-d4afb21176a0.png" width="600" height="200">
+
+<img src="https://user-images.githubusercontent.com/34255556/197315695-5f19b123-22a3-4751-82cd-d6bbca13a3d9.png" width="600" height="200">
 
 2. Copy Docker_env folder into a separate directory, before proceeding with subsequent steps which will use Docker_env folder as root directory.
-
-3. Create the following volumes (mysql and mysql configuration) and network in Docker for connecting between database container and application container using the following syntax:
-```
-docker volume create mysql
-docker volume create mysql_config
-docker network create mysqlnet
-```
-- Note that the naming conventions for both volumes and network can be changed.
-
-4. Run the following docker volumes and network for creating a new MySQL container in Docker:
-```
-docker run --rm -d -v mysql:/var/lib/mysql -v mysql_config:/etc/mysql -p 3306:3306 --network mysqlnet --name mysqldb -e MYSQL_ROOT_PASSWORD=custom_password mysql
-```
-Note that mysqldb refers to the name of the container, which will also be host name of database.
-
-5. For checking if the MySQL container has been created successfully, the following command can be executed on a separate command prompt, which will prompt the user to enter root password defined in previous step:
-```
-docker exec -ti mysqldb mysql -u root -p
-```
   
-6. Add an additional Python file named as DBConnectionSetup.py that contains the following Python code structure: 
-```
-logins = {"host": <host_name>, 
-          "user": <user_name>, 
-          "password": <password>, 
-          "dbname": <default_database_name>} 
-```
-- For security reasons, this file needs to be stored in private. (Default host is container name defined in step 4 and user is root for MySQL)
+3. On line 8 inside Dockerfile, set the environment variable MONGO_DB_URL as the connection string defined in the last step of MongoDB Atlas Setup section.
 
-7. Build a new docker image on the project directory with the following command:
+![image](https://user-images.githubusercontent.com/34255556/197315793-d676cd57-b2e3-4702-9c83-1fcd84efe6d8.png)
+
+4. Build a new docker image on the project directory with the following command:
 ```
 docker build -t api-name .
 ```
 
-8. Run the docker image on the project directory with the following command: 
+5. Run the docker image on the project directory with the following command: 
 ```
-docker run --network mysqlnet -e PORT=8501 -p 8501:8501 api-name
+docker run -e PORT=8501 -p 8501:8501 api-name
 ```
-Note that the command above creates a new docker app container with the given image "api-name". Adding network onto the docker app container will allow connection between two separate docker containers.
 
-9. A new browser will open after successfully running the streamlit app with the following interface:
-<img src = "https://user-images.githubusercontent.com/34255556/195365035-d2f9bc6e-76b6-45e8-ba25-db1b02e5d7a3.png" width="600">
+6. A new browser will open after successfully running the streamlit app with the following interface:
+
+<img src = "https://user-images.githubusercontent.com/34255556/197315976-fa90cc7a-a0b3-4c82-9c38-62072db71399.png" width="600">
 
 Browser for the application can be opened from Docker Desktop by clicking on the specific button shown below:
-![image](https://user-images.githubusercontent.com/34255556/195381876-b3377125-a9c1-46c0-aa4f-9734c430638d.png)
 
-10. From the image above, click on Training Data Validation first for initializing data ingestion into MySQL, followed by subsequent steps from top to bottom in order to avoid potential errors with the model training/model prediction process. The image below shows an example of notification after the process is completed for Training Data Validation process:
-<img src = "https://user-images.githubusercontent.com/34255556/195366117-9c65a3b6-b405-4967-9236-907f3b012439.png" width="600">
+![image](https://user-images.githubusercontent.com/34255556/197315936-2ea47b7a-9919-4010-b806-52f864966ea3.png)
 
-11. After running all steps of the pipeline, run the following command to extract files from a specific directory within the docker container to host machine for viewing:
+7. From the image above, click on Training Data Validation first for initializing data ingestion into MongoDB Atlas, followed by subsequent steps from top to bottom in order to avoid potential errors with the model training/model prediction process. The image below shows an example of notification after the process is completed for Training Data Validation process:
+
+<img src = "https://user-images.githubusercontent.com/34255556/197316040-748289f6-f509-4e29-aac0-1765de6d3167.png" width="600">
+
+8. After running all steps of the training pipeline, run the following command to extract files from a specific directory within the docker container to host machine for viewing:
 ```
 docker cp <container-id>:<source-dir> <destination-dir>
 ```
+
+9. After performing model training, clicking on the Model Prediction section expands the following section that allows user input for model prediction:
+
+<img src = "https://user-images.githubusercontent.com/34255556/197316098-ec71b7df-6819-4c46-944b-27596c6b262b.png" width="600">
+
+10. The image below shows an example of output from model prediction after successfully completed all of the above steps:
+
+<img src = "https://user-images.githubusercontent.com/34255556/197316193-d1cf6fb7-91be-4283-91d6-cced35c70e41.png" width="600">
 
 ## Project Instructions (Heroku with Docker)
 ---
@@ -423,55 +443,49 @@ A suitable alternative for deploying this project is to use docker images with c
 
 For replicating the steps required for running this project on your own Heroku account, the following steps are required:
 1. Clone this github repository into your local machine system or your own Github account if available.
-<img src="https://user-images.githubusercontent.com/34255556/195367439-1dd10dd8-5e22-412e-8620-d4afb21176a0.png" width="600" height="200">
+
+<img src="https://user-images.githubusercontent.com/34255556/197315695-5f19b123-22a3-4751-82cd-d6bbca13a3d9.png" width="600" height="200">
 
 2. Copy Docker_env folder into a separate directory, before proceeding with subsequent steps which will use Docker_env folder as root directory.
 
 3. Go to your own Heroku account and create a new app with your own customized name.
 <img src="https://user-images.githubusercontent.com/34255556/160223589-301262f6-6225-4962-a92f-fc7ca8a0eee9.png" width="600" height="400">
 
-4. Go to "Resources" tab and search for ClearDB MySQL in the add-ons search bar.
-<img src="https://user-images.githubusercontent.com/34255556/160224064-35295bf6-3170-447a-8eae-47c6721cf8f0.png" width="600" height="200">
+4. On line 8 inside Dockerfile, set the environment variable MONGO_DB_URL as the connection string defined in the last step of MongoDB Atlas Setup section.
 
-5. Select the ClearDB MySQL add-on and select the relevant pricing plan. (Note that I select Punch plan, which currently cost about $9.99 per month to increase storage capacity for this project.)
+![image](https://user-images.githubusercontent.com/34255556/197315793-d676cd57-b2e3-4702-9c83-1fcd84efe6d8.png)
 
-6. Add an additional Python file named as DBConnectionSetup.py that contains the following Python code structure: 
-```
-  logins = {"host": <host_name>, 
-            "user": <user_name>, 
-            "password": <password>, 
-            "dbname": <default_Heroku_database_name>}
-```
-- For security reasons, this file needs to be stored in private.
-
-- Information related to host, user and dbname for ClearDB MySQL can be found in the settings tab under ConfigVars section as shown in the image below:
-
-![image](https://user-images.githubusercontent.com/34255556/195486639-e1c94433-54c9-43ca-a134-c7501e84111f.png)
-
-- <b>CLEARDB_DATABASE_URL has the following format: mysql://<user_name>:<pass_word>@<host_name>/<db_name>?reconnect=true</b>
-
-7. From a new command prompt window, login to Heroku account and Container Registry by running the following commands:
+5. From a new command prompt window, login to Heroku account and Container Registry by running the following commands:
 ```
 heroku login
 heroku container:login
 ```
 Note that Docker needs to be installed on your local system before login to heroku's container registry.
 
-8. Using the Dockerfile, push the docker image onto Heroku's container registry using the following command:
+6. Using the Dockerfile, push the docker image onto Heroku's container registry using the following command:
 ```
 heroku container:push web -a app-name
 ```
 
-9. Release the newly pushed docker images to deploy app using the following command:
+7. Release the newly pushed docker images to deploy app using the following command:
 ```
 heroku container:release web -a app-name
 ```
 
-10. After successfully deploying docker image onto Heroku, open the app from the Heroku platform and you will see the following interface designed using Streamlit:
-<img src = "https://user-images.githubusercontent.com/34255556/195365035-d2f9bc6e-76b6-45e8-ba25-db1b02e5d7a3.png" width="600">
+8. After successfully deploying docker image onto Heroku, open the app from the Heroku platform and you will see the following interface designed using Streamlit:
+<img src = "https://user-images.githubusercontent.com/34255556/197315976-fa90cc7a-a0b3-4c82-9c38-62072db71399.png" width="600">
 
-11. From the image above, click on Training Data Validation first for initializing data ingestion into MySQL, followed by subsequent steps from top to bottom in order to avoid potential errors with the model training/model prediction process. The image below shows an example of notification after the process is completed for Training Data Validation process:
-<img src = "https://user-images.githubusercontent.com/34255556/195366117-9c65a3b6-b405-4967-9236-907f3b012439.png" width="600">
+9. From the image above, click on Training Data Validation first for initializing data ingestion into MongoDB Atlas, followed by subsequent steps from top to bottom in order to avoid potential errors with the model training/model prediction process. The image below shows an example of notification after the process is completed for Training Data Validation process:
+
+<img src = "https://user-images.githubusercontent.com/34255556/197316040-748289f6-f509-4e29-aac0-1765de6d3167.png" width="600">
+
+10. After performing model training, clicking on the Model Prediction section expands the following section that allows user input for model prediction:
+
+<img src = "https://user-images.githubusercontent.com/34255556/197316098-ec71b7df-6819-4c46-944b-27596c6b262b.png" width="600">
+
+11. The image below shows an example of output from model prediction after successfully completed all of the above steps:
+
+<img src = "https://user-images.githubusercontent.com/34255556/197316193-d1cf6fb7-91be-4283-91d6-cced35c70e41.png" width="600">
 
 <b>Important Note</b>: 
 - Using "free" dynos on Heroku app only allows the app to run for a maximum of 30 minutes. Since the model training and prediction process takes a long time, consider changing the dynos type to "hobby" for unlimited time, which cost about $7 per month per dyno. You may also consider changing the dynos type to Standard 1X/2X for enhanced app performance.
@@ -483,21 +497,11 @@ heroku container:release web -a app-name
 If you prefer to deploy this project on your local machine system, the steps for deploying this project has been simplified down to the following:
 
 1. Download and extract the zip file from this github repository into your local machine system.
-<img src="https://user-images.githubusercontent.com/34255556/195367439-1dd10dd8-5e22-412e-8620-d4afb21176a0.png" width="600" height="200">
+<img src="https://user-images.githubusercontent.com/34255556/197315695-5f19b123-22a3-4751-82cd-d6bbca13a3d9.png" width="600" height="200">
 
 2. Copy Docker_env folder into a separate directory, before proceeding with subsequent steps which will use Docker_env folder as root directory.
   
-3. Add an additional Python file named as DBConnectionSetup.py that contains the following Python code structure: 
-```
-logins = {"host": <host_name>, 
-          "user": <user_name>, 
-          "password": <password>, 
-          "dbname": <new_local_database_name>} 
-```
-- For security reasons, this file needs to be stored in private. (Default host is localhost and user is root for MySQL)
-- Note that you will need to install MySQL if not available in your local system: https://dev.mysql.com/downloads/windows/installer/8.0.html
-- Ensure that MySQL services is running on local system as shown in image below:
-![image](https://user-images.githubusercontent.com/34255556/195826091-f28233e3-9f45-46cd-b760-0a3108c9d570.png)
+3. Add environment variable "MONGO_DB_URL" with connection string defined from last step of MongoDB Atlas setup section as value on your local system. The following link provides an excellent guide for setting up environment variables on your local system: https://chlee.co/how-to-setup-environment-variables-for-windows-mac-and-linux/
 
 4. Open anaconda prompt and create a new environment with the following syntax: 
 ```
@@ -519,14 +523,24 @@ pip install -r requirements.txt
 
 8. After installing all the required Python libraries, run the following command on your project directory: 
 ```
-streamlit run main.py
+streamlit run pipeline_api.py
 ```
 
-9. A new browser will open after successfully running the streamlit app with the following interface::
-<img src = "https://user-images.githubusercontent.com/34255556/195365035-d2f9bc6e-76b6-45e8-ba25-db1b02e5d7a3.png" width="600">
+9. A new browser will open after successfully running the streamlit app with the following interface:
 
-10. From the image above, click on Training Data Validation first for initializing data ingestion into MySQL, followed by subsequent steps from top to bottom in order to avoid potential errors with the model training/model prediction process. The image below shows an example of notification after the process is completed for Training Data Validation process:
-<img src = "https://user-images.githubusercontent.com/34255556/195366117-9c65a3b6-b405-4967-9236-907f3b012439.png" width="600">
+<img src = "https://user-images.githubusercontent.com/34255556/197315976-fa90cc7a-a0b3-4c82-9c38-62072db71399.png" width="600">
+
+10. From the image above, click on Training Data Validation first for initializing data ingestion into MongoDB Atlas, followed by subsequent steps from top to bottom in order to avoid potential errors with the model training/model prediction process. The image below shows an example of notification after the process is completed for Training Data Validation process:
+
+<img src = "https://user-images.githubusercontent.com/34255556/197316040-748289f6-f509-4e29-aac0-1765de6d3167.png" width="600">
+
+11. After performing model training, clicking on the Model Prediction section expands the following section that allows user input for model prediction:
+
+<img src = "https://user-images.githubusercontent.com/34255556/197316098-ec71b7df-6819-4c46-944b-27596c6b262b.png" width="600">
+
+12. The image below shows an example of output from model prediction after successfully completed all of the above steps:
+
+<img src = "https://user-images.githubusercontent.com/34255556/197316193-d1cf6fb7-91be-4283-91d6-cced35c70e41.png" width="600">
 
 ## Initial Data Cleaning and Feature Engineering
 ---
