@@ -29,6 +29,7 @@ For model prediction, a web API is used (created using StreamLit) for user input
 - [CRISP-DM Methodology](#crisp-dm-methodology)
 - [Project Architecture Summary](#project-architecture-summary)
 - [Project Folder Structure](#project-folder-structure)
+- [MongoDB Atlas Setup](#mongodb-atlas-setup)
 - [Project Instructions (Local Environment)](#project-instructions-local-environment)
 - [Project Instructions (Docker)](#project-instructions-docker)
 - [Project Instructions (Heroku with Docker)](#project-instructions-heroku-with-docker)
