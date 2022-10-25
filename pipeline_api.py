@@ -59,24 +59,19 @@ def main():
             trainer.model_selection(
                 input = X, output = y, num_trials = 40, folderpath = RESULT_DIR, model_names = model_names)
             st.success("This step of the pipeline has been completed successfully. Check the local files for more details.")
-    choices = dict()
-    def format_func(option):
-          return choices[option]
-    choices = {1: 'LogisticRegression', 2: 'LinearSVC', 3: 'KNeighborsClassifier', 4: 'GaussianNB', 5: 'DecisionTreeClassifier', 6: 'RandomForestClassifier', 7: 'ExtraTreesClassifier', 8: 'AdaBoostClassifier', 9: 'GradientBoostingClassifier', 10: 'XGBClassifier', 11: 'LGBMClassifier', 12: 'CatBoostClassifier'}
-    model_list = choices.copy()
-    model_number = st.selectbox(
-        "Select the following model you would like to train for final model deployment", options=list(choices.keys()), format_func=format_func)
+    model_name = st.selectbox(
+        "Select the following model you would like to train for final model deployment", options=['LogisticRegression', 'LinearSVC','KNeighborsClassifier', 'GaussianNB', 'DecisionTreeClassifier', 'RandomForestClassifier', 'ExtraTreesClassifier', 'AdaBoostClassifier', 'GradientBoostingClassifier', 'XGBClassifier', 'LGBMClassifier', 'CatBoostClassifier'])
     if st.button("Final Model Training"):
         if not os.path.isdir(RESULT_DIR) or 'X.csv' not in os.listdir(RESULT_DIR):
             st.error("Data has not yet been preprocessed. Have u skipped Training Data Preprocessing step?")
-        elif not os.path.isdir(RESULT_DIR + model_list[model_number]):
+        elif not os.path.isdir(RESULT_DIR + model_name):
             st.error("Model algorithm selection has not been done. Have u skipped model selection step?")
         else:
             trainer = model_trainer(file_object= TRAINING_LOG)
             X = pd.read_csv(RESULT_DIR + 'X.csv')
             y = pd.read_csv(RESULT_DIR + 'y.csv')
             trainer.final_model_tuning(
-                input_data = X, output_data = y, num_trials = 40, folderpath = RESULT_DIR, model_number = model_number)
+                input_data = X, output_data = y, num_trials = 40, folderpath = RESULT_DIR, model_name = model_name)
             st.success("This step of the pipeline has been completed successfully. Check the local files for more details.")
     with st.expander("Model Prediction"):
         Read_Info_Sheet = st.selectbox(
@@ -85,6 +80,9 @@ def main():
             'Do u provide permission for accessing your school health records?', options=['Yes','No'])
         Birth_date = st.date_input(
             "Select your birth date", value=date(2010,1,1), min_value=date(2007,1,1), max_value = date(2012,12,31)).strftime("%Y-%m-%d")
+        choices = dict()
+        def format_func(option):
+            return choices[option]
         choices ={349:'Aberbargod 1', 177:'Aberbargod 2', 718:'Abercarn 2', 1174:'Abercynffig', 735:'Aberdulais', 936:'Abergwaun Gogledd Orllewin', 
         1398:'Abergwili', 311:'Abersychan 1', 1048:'Abersychan 3', 837:'Abersychan 5', 72:'Alway 2', 1426:'Alway 3', 393:'Alway 5', 834:'Alway 6', 1079:'Amroth', 1523:'Arberth Gwledig', 1802:'Baglan 2', 538:'Bargod 1', 
         704:'Bargod 2', 456:'Bargod 3', 

@@ -1,6 +1,6 @@
 '''
 Author: Liaw Yi Xian
-Last Modified: 20th October 2022
+Last Modified: 25th October 2022
 '''
 
 import warnings
@@ -1009,6 +1009,7 @@ class model_trainer:
             - output: Target column from dataset
             - num_trials: Number of Optuna trials for hyperparameter tuning
             - folderpath: String path name where all results generated from model training are stored.
+            - model_names: List of model names provided as input by user for model selection
         '''
         self.log_writer.log(
             self.file_object, 'Start process of model selection')
@@ -1046,7 +1047,7 @@ class model_trainer:
 
 
     def final_model_tuning(
-            self, input_data, output_data, num_trials, folderpath, model_number):
+            self, input_data, output_data, num_trials, folderpath, model_name):
         '''
             Method Name: final_model_tuning
             Description: This method performs final model training from best model algorithm identified on entire dataset using Stratified 3-fold cross validation.
@@ -1057,30 +1058,24 @@ class model_trainer:
             - output_data: Target column from dataset
             - num_trials: Number of Optuna trials for hyperparameter tuning
             - folderpath: String path name where all results generated from model training are stored.
+            - model_name: Name of model selected for final model training.
         '''
         self.input_data = input_data
         self.output_data = output_data
         self.num_trials = num_trials
         self.folderpath = folderpath
-        self.model_number = model_number
+        self.model_name = model_name
         optuna.logging.set_verbosity(optuna.logging.DEBUG)
-        try:
-            model_options = {1: 'LogisticRegression', 2: 'LinearSVC', 3: 'KNeighborsClassifier', 4: 'GaussianNB', 5: 'DecisionTreeClassifier', 6: 'RandomForestClassifier', 7: 'ExtraTreesClassifier', 8: 'AdaBoostClassifier', 9: 'GradientBoostingClassifier', 10: 'XGBClassifier', 11: 'LGBMClassifier', 12: 'CatBoostClassifier'}
-            best_model_name = model_options[self.model_number]
-        except:
-            print(
-                'Please insert a valid number of choice for model deployment.')
-            return
         self.log_writer.log(
-            self.file_object, f"Start performing hyperparameter tuning on best model identified overall: {best_model_name}")
-        obj = self.optuna_selectors[best_model_name]['obj']
-        clf = self.optuna_selectors[best_model_name]['clf']
+            self.file_object, f"Start performing hyperparameter tuning on best model identified overall: {self.model_name}")
+        obj = self.optuna_selectors[self.model_name]['obj']
+        clf = self.optuna_selectors[self.model_name]['clf']
         input_data = self.input_data.copy()
         output_data = self.output_data['Wellbeing_Category_WMS'].copy()
         self.final_overall_model(
             obj = obj, clf = clf, input_data = input_data, output_data = output_data, n_trials = self.num_trials)
         self.log_writer.log(
-            self.file_object, f"Finish performing hyperparameter tuning on best model identified overall: {best_model_name}")
+            self.file_object, f"Finish performing hyperparameter tuning on best model identified overall: {self.model_name}")
 
 
 class FeatureEngineTransformer(BaseEstimator, TransformerMixin):
@@ -1440,7 +1435,7 @@ class FeatureSelectionTransformer(BaseEstimator, TransformerMixin):
             self, method, model, scaling_indicator= 'no', cluster_indicator= 'no', damping = None, number=None):
         '''
             Method Name: __init__
-            Description: This method initializes instance of MissingTransformer class
+            Description: This method initializes instance of FeatureSelectionTransformer class
             Output: None
 
             Parameters:

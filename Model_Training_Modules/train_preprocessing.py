@@ -1,6 +1,6 @@
 '''
 Author: Liaw Yi Xian
-Last Modified: 20th October 2022
+Last Modified: 25th October 2022
 '''
 
 import warnings
@@ -290,7 +290,7 @@ class train_Preprocessor:
         for rect in barplot.patches:
             width = rect.get_width()
             plt.text(
-                0.5+rect.get_width(), rect.get_y()+0.5*rect.get_height(),'%.1d' % width, ha='center', va='center')
+                rect.get_width(), rect.get_y()+0.5*rect.get_height(),'%.1d' % width, ha='left', va='center')
         plt.title("Number of null values", fontdict={'fontsize':24})
         plt.savefig(
             self.result_dir+"EDA/Proportion of null values",bbox_inches='tight', pad_inches=0.2)
@@ -312,7 +312,7 @@ class train_Preprocessor:
                 for rect in countplot.patches:
                     width = rect.get_width()/len(data)*100
                     plt.text(
-                        rect.get_width()+8, rect.get_y()+0.5*rect.get_height(), '%.2f' % width + '%', ha='center', va='center')
+                        rect.get_width(), rect.get_y()+0.5*rect.get_height(), '%.2f' % width + '%', ha='left', va='center')
                 plt.title(f'{col} distribution')
                 plt.savefig(self.result_dir+f'EDA/{col}/{col}_nunique.png', bbox_inches='tight', pad_inches=0.2)
                 plt.clf()
@@ -338,7 +338,7 @@ class train_Preprocessor:
                 for rect in countplot.patches:
                     width = rect.get_width()/len(data)*100
                     plt.text(
-                        rect.get_width()+8, rect.get_y()+0.5*rect.get_height(), '%.2f' % width + '%', ha='center', va='center')
+                        rect.get_width(), rect.get_y()+0.5*rect.get_height(), '%.2f' % width + '%', ha='left', va='center')
                 plt.title(f'{col} distribution by wellbeing category', fontdict={'fontsize':24})
                 plt.legend(loc="best")
                 plt.savefig(
