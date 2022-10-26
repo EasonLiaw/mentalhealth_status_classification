@@ -110,20 +110,23 @@ For model evaluation on multiclass classification, the following metrics are use
 
 All plots generated from this section can be found in Intermediate_Train_Results/EDA folder.
 
-#### i. Basic metadata of dataset
+##### i. Basic metadata of dataset
 On initial inspection, the current dataset used in this project has a total of 71 features. Both "_id" and "ID.1 features represent unique identifier of a given record and the remaining features have  mix of "float", "int" and "object" data types. Upon closer inspection on data dictionary, there are several date-time related features where further information can be extracted and remaining features are considered as categorical variables.
 
+##### ii. Target variable distribution
 Given that there is no target variable, this project requires creating target variable manually (Wellbeing_Category_WMS - mainly based on variables related to Me and My Feelings Questionnaire. More details can be found in the coding file labeled "train preprocessing.py")
 
 ![Target_Class_Distribution](https://user-images.githubusercontent.com/34255556/196934993-fc9bbe23-81c3-459c-8263-2ff26a51b31f.png)
 
 From the diagram above, there is a very clear indication of target imbalance between all 4 classes for multiclass classification. This indicates that target imbalancing needs to be addressed during model training.
 
+##### iii. Missing values
 ![Proportion of null values](https://user-images.githubusercontent.com/34255556/196935092-1ba7c4e8-740f-49e7-bfc3-2247ee977b32.png)
 
 From the diagram above, most features with missing values identified have missing proportions approximately less than 1%, except for "Method_of_keepintouch" feature with approximately 3% containing missing values.
 
-Furthermore, the following sets of plots are created for every feature of the dataset that contains less than 100 unique values:
+##### iv. Categorical Features
+The following sets of plots are created for every feature of the dataset that contains less than 100 unique values:
 1. Count plot (Number of unique values per category)
 2. Count plot (Number of unique values per category by target class)
 3. Bar plot (Number of missing values by target class) - For features with missing values
