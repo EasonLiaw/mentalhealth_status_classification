@@ -322,7 +322,7 @@ The following points below summarizes the use of every file/folder available for
 3. Model_Training_Modules: Helper modules for model training
 4. Saved_Models: Stores best models identified from model training process for model prediction
 5. Training_Batch_Files: Stores csv batch files to be used for model training
-6. Training_Data_FromDB: Stores compiled data from SQL database for model training
+6. Training_Data_FromDB: Stores compiled data from MongoDB database for model training
 7. Training_Logs: Stores logging information from model training for future debugging and maintenance
 8. Dockerfile: Additional file for Docker project deployment
 9. README.md: Details summary of project for presentation
