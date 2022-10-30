@@ -1,24 +1,23 @@
 '''
 Author: Liaw Yi Xian
-Last Modified: 25th October 2022
+Last Modified: 30th October 2022
 '''
 
 import warnings
 warnings.filterwarnings('ignore')
 import pandas as pd
 from Application_Logger.logger import App_Logger
+from Application_Logger.exception import CustomException
 import numpy as np
 import joblib
 from feature_engine.imputation import CategoricalImputer
 import seaborn as sns
 import matplotlib.pyplot as plt
-import os
+import os, sys
 import plotly.express as px
 from tqdm import tqdm
 from collections import Counter
 import datetime
-
-random_state=120
 
 class train_Preprocessor:
 
@@ -52,10 +51,8 @@ class train_Preprocessor:
         try:
             data = pd.read_csv(self.datapath)
         except Exception as e:
-            self.log_writer.log(
-                self.file_object, f"Fail to read compiled data from database with the following error: {e}")
-            raise Exception(
-                f"Fail to read compiled data from database with the following error: {e}")
+            self.log_writer.log(self.file_object, str(CustomException(e,sys)))
+            raise CustomException(e,sys)
         self.log_writer.log(
             self.file_object, "Finish reading compiled data from database")
         return data
@@ -80,10 +77,8 @@ class train_Preprocessor:
                 [pd.Series(cols, name='Columns_Removed'), pd.Series(["Irrelevant column"]*len(cols), name='Reason')], axis=1)
             result.to_csv(self.result_dir+self.col_drop_path, index=False)
         except Exception as e:
-            self.log_writer.log(
-                self.file_object, f"Irrelevant columns could not be removed from the dataset with the following error: {e}")
-            raise Exception(
-                f"Irrelevant columns could not be removed from the dataset with the following error: {e}")
+            self.log_writer.log(self.file_object, str(CustomException(e,sys)))
+            raise CustomException(e,sys)
         self.log_writer.log(
             self.file_object, "Finish removing irrelevant columns from the dataset")
         return data
@@ -110,10 +105,8 @@ class train_Preprocessor:
                     self.result_dir+'Duplicated_Records_Removed.csv', index=False)
                 data = data.drop_duplicates(ignore_index=True)
             except Exception as e:
-                self.log_writer.log(
-                    self.file_object, f"Fail to remove duplicated rows with the following error: {e}")
-                raise Exception(
-                    f"Fail to remove duplicated rows with the following error: {e}")
+                self.log_writer.log(self.file_object, str(CustomException(e,sys)))
+                raise CustomException(e,sys)
         self.log_writer.log(
             self.file_object, "Finish handling duplicated rows in the dataset")
         return data
@@ -136,10 +129,8 @@ class train_Preprocessor:
             X = data.drop(target_col, axis=1)
             y = data[target_col]
         except Exception as e:
-            self.log_writer.log(
-                self.file_object, f"Fail to separate features and labels with the following error: {e}")
-            raise Exception(
-                f"Fail to separate features and labels with the following error: {e}")
+            self.log_writer.log(self.file_object, str(CustomException(e,sys)))
+            raise CustomException(e,sys)
         self.log_writer.log(
             self.file_object, "Finish separating the data into features and labels")
         return X, y
@@ -149,6 +140,7 @@ class train_Preprocessor:
         '''
             Method Name: derive_target
             Description: This custom method derives target variable known as "Wellbeing_Category_WMS" based on existing features related to wellbeing of children.
+            Output: Pandas dataframe object consist of additional columns and two list objects containing columns related to emotional wellbeing and behaviour wellbeing.
             On Failure: Logging error and raise exception
 
             Parameters:
@@ -179,10 +171,8 @@ class train_Preprocessor:
             data['Wellbeing_Category_WMS'] = (data['Emotional_Wellbeing_Category_WMS'] + data['Behaviour_Wellbeing_Category_WMS']).map(
             {'normalnormal':'normal','significantnormal':'emotional_significant','normalsignificant':'behaviour_significant','significantsignificant':'emotional_and_behaviour_significant'})
         except Exception as e:
-            self.log_writer.log(
-                self.file_object, f"Fail to derive target values on the dataset with the following error: {e}")
-            raise Exception(
-                f"Fail to derive target values on the dataset with the following error: {e}")
+            self.log_writer.log(self.file_object, str(CustomException(e,sys)))
+            raise CustomException(e,sys)
         self.log_writer.log(
             self.file_object, "Finish deriving target values on the dataset.")
         return data, emotional_cols, behaviour_cols
@@ -192,6 +182,7 @@ class train_Preprocessor:
         '''
             Method Name: reformat_time_features
             Description: This custom method reformats certain time features of the dataset for further data preprocessing.
+            Output: Pandas dataframe object consists of additional columns
             On Failure: Logging error and raise exception
 
             Parameters:
@@ -210,10 +201,8 @@ class train_Preprocessor:
             data['Awaketime_today'] = data['Awaketime_today'].apply(
                 lambda x: datetime.datetime.strptime(x, '%I:%M%p') + datetime.timedelta(days=1))
         except Exception as e:
-            self.log_writer.log(
-                self.file_object, f"Fail to reformat certain time features on the dataset with the following error: {e}")
-            raise Exception(
-                f"Fail to reformat certain time features on the dataset with the following error: {e}")
+            self.log_writer.log(self.file_object, str(CustomException(e,sys)))
+            raise CustomException(e,sys)
         self.log_writer.log(
             self.file_object, 'Finish reformatting certain time features on the dataset.')
         return data
@@ -223,6 +212,7 @@ class train_Preprocessor:
         '''
             Method Name: category_imputing
             Description: This custom method performs missing data imputation for categorical variables based on most frequent category for every feature with missing values.
+            Output: Pandas dataframe object with transformed features
             On Failure: Logging error and raise exception
 
             Parameters:
@@ -246,10 +236,8 @@ class train_Preprocessor:
             data['WIMD_2019_Quartile'] = data['WIMD_2019_Quartile'].apply(
                 lambda x: str(train_Preprocessor.quartile_ranking(most_ranked)) if x=='not found' else x)
         except Exception as e:
-            self.log_writer.log(
-                self.file_object, f"Fail to impute missing categorical data by most frequent category with the following error: {e}")
-            raise Exception(
-                f"Fail to impute missing categorical data by most frequent category with the following error: {e}")
+            self.log_writer.log(self.file_object, str(CustomException(e,sys)))
+            raise CustomException(e,sys)
         self.log_writer.log(
             self.file_object, "Finish imputing missing categorical data by most frequent category")
         return data
@@ -260,96 +248,101 @@ class train_Preprocessor:
             Method Name: eda
             Description: This method performs exploratory data analysis on the entire dataset, while generating various plots/csv files for reference.
             Output: None
+            On Failure: Logging error and raise exception
         '''
         self.log_writer.log(
             self.file_object, 'Start performing exploratory data analysis')
-        path = os.path.join(self.result_dir, 'EDA')
-        if not os.path.exists(path):
-            os.mkdir(path)
-        scat_path = os.path.join(path, 'High_Correlation_Scatterplots')
-        if not os.path.exists(scat_path):
-            os.mkdir(scat_path)
-        data = self.extract_compiled_data()
-        data = data[data['Use_questionnaire'] == 'Yes']
-        data.drop('Use_questionnaire',axis=1, inplace=True)
-        # Extract basic information about dataset
-        pd.DataFrame({"name": data.columns, "non-nulls": len(data)-data.isnull().sum().values, "type": data.dtypes.values}).to_csv(self.result_dir + "EDA/Data_Info.csv",index=False)
-        # Extract summary statistics about dataset
-        data.describe().T.to_csv(
-            self.result_dir + "EDA/Data_Summary_Statistics.csv")
-        # Plotting proportion of null values of dataset
-        null_prop = []
-        for col in data.columns:
-            null_prop.append(data[col].isnull().sum())
-        null_results = pd.DataFrame(
-            [data.columns, null_prop], index=['Variable','Number']).T
-        null_results = null_results[null_results['Number']>0].sort_values(by='Number',ascending=False)
-        plt.figure(figsize=(24, 16),dpi=100)
-        barplot = sns.barplot(
-            data=null_results,y='Variable',x='Number',palette='flare_r')
-        for rect in barplot.patches:
-            width = rect.get_width()
-            plt.text(
-                rect.get_width(), rect.get_y()+0.5*rect.get_height(),'%.1d' % width, ha='left', va='center')
-        plt.title("Number of null values", fontdict={'fontsize':24})
-        plt.savefig(
-            self.result_dir+"EDA/Proportion of null values",bbox_inches='tight', pad_inches=0.2)
-        plt.clf()
-        # Extract information related to number of unique values for every feature of dataset
-        nunique_values = []
-        for col in data.columns:
-            nunique_values.append(data[col].nunique())
-        pd.DataFrame(
-            [data.columns, nunique_values], index=['Variable','Number']).T.to_csv(self.result_dir + "EDA/Number_Unique_Values.csv", index=False)
-        for col in tqdm(data.columns):
-            col_path = os.path.join(path, col)
-            if not os.path.exists(col_path):
-                os.mkdir(col_path)
-            data[col].value_counts().to_csv(
-                self.result_dir+f'EDA/{col}/{col}_nunique.csv')
-            if data[col].nunique() < 50:
-                countplot = sns.countplot(data = data, y = col)
-                for rect in countplot.patches:
-                    width = rect.get_width()/len(data)*100
-                    plt.text(
-                        rect.get_width(), rect.get_y()+0.5*rect.get_height(), '%.2f' % width + '%', ha='left', va='center')
-                plt.title(f'{col} distribution')
-                plt.savefig(self.result_dir+f'EDA/{col}/{col}_nunique.png', bbox_inches='tight', pad_inches=0.2)
-                plt.clf()
-            if col in ['Breakfast_ytd','Method_of_keepintouch','Type_of_play_places']:
-                splitted_list = []
-                for i in list(data[col]):
-                    if type(i)!=float:
-                        splitted_list.extend(i.split(';'))
-                pd.DataFrame(Counter(splitted_list).most_common(),columns=[col,'Frequency']).to_csv(
-                    self.result_dir + f"EDA/{col}/{col}_Unique_Values_Split.csv", index=False)            
-        # Deriving target variable
-        data, emotional_cols, behaviour_cols = self.derive_target(data)
-        # Plotting target class distribution
-        target_dist = data['Wellbeing_Category_WMS'].value_counts().reset_index().rename(columns={'index': 'Wellbeing_Category_WMS','Wellbeing_Category_WMS':'Number_Obs'})
-        fig6 = px.bar(
-            target_dist,x='Wellbeing_Category_WMS',y='Number_Obs',title=f"Target Class Distribution",text_auto=True)
-        fig6.write_image(self.result_dir + f"EDA/Target_Class_Distribution.png")
-        #  Plotting distribution of features by target class 
-        for col in tqdm(data.columns):
-            if (data[col].nunique() < 50) & (col.find('Wellbeing')==-1):
-                countplot = sns.countplot(
-                    data = data, y = col, hue='Wellbeing_Category_WMS')
-                for rect in countplot.patches:
-                    width = rect.get_width()/len(data)*100
-                    plt.text(
-                        rect.get_width(), rect.get_y()+0.5*rect.get_height(), '%.2f' % width + '%', ha='left', va='center')
-                plt.title(f'{col} distribution by wellbeing category', fontdict={'fontsize':24})
-                plt.legend(loc="best")
-                plt.savefig(
-                    self.result_dir+f'EDA/{col}/{col}_nunique_by_target.png', bbox_inches='tight', pad_inches=0.2)
-                plt.clf()
-            if data[col].isnull().sum() != 0:
-                # Plotting histogram of number of missing values of features by target class
-                fig4 = px.histogram(
-                    data,x=data[col].isnull(),color='Wellbeing_Category_WMS',title=f"{col} Number of Missing Values by Target",text_auto=True, height=800, width=800)
-                fig4.write_image(
-                    self.result_dir + f"EDA/{col}/{col}_Count_Missing_By_Target.png")
+        try:
+            path = os.path.join(self.result_dir, 'EDA')
+            if not os.path.exists(path):
+                os.mkdir(path)
+            scat_path = os.path.join(path, 'High_Correlation_Scatterplots')
+            if not os.path.exists(scat_path):
+                os.mkdir(scat_path)
+            data = self.extract_compiled_data()
+            data = data[data['Use_questionnaire'] == 'Yes']
+            data.drop('Use_questionnaire',axis=1, inplace=True)
+            # Extract basic information about dataset
+            pd.DataFrame({"name": data.columns, "non-nulls": len(data)-data.isnull().sum().values, "type": data.dtypes.values}).to_csv(self.result_dir + "EDA/Data_Info.csv",index=False)
+            # Extract summary statistics about dataset
+            data.describe().T.to_csv(
+                self.result_dir + "EDA/Data_Summary_Statistics.csv")
+            # Plotting proportion of null values of dataset
+            null_prop = []
+            for col in data.columns:
+                null_prop.append(data[col].isnull().sum())
+            null_results = pd.DataFrame(
+                [data.columns, null_prop], index=['Variable','Number']).T
+            null_results = null_results[null_results['Number']>0].sort_values(by='Number',ascending=False)
+            plt.figure(figsize=(24, 16),dpi=100)
+            barplot = sns.barplot(
+                data=null_results,y='Variable',x='Number',palette='flare_r')
+            for rect in barplot.patches:
+                width = rect.get_width()
+                plt.text(
+                    rect.get_width(), rect.get_y()+0.5*rect.get_height(),'%.1d' % width, ha='left', va='center')
+            plt.title("Number of null values", fontdict={'fontsize':24})
+            plt.savefig(
+                self.result_dir+"EDA/Proportion of null values",bbox_inches='tight', pad_inches=0.2)
+            plt.clf()
+            # Extract information related to number of unique values for every feature of dataset
+            nunique_values = []
+            for col in data.columns:
+                nunique_values.append(data[col].nunique())
+            pd.DataFrame(
+                [data.columns, nunique_values], index=['Variable','Number']).T.to_csv(self.result_dir + "EDA/Number_Unique_Values.csv", index=False)
+            for col in tqdm(data.columns):
+                col_path = os.path.join(path, col)
+                if not os.path.exists(col_path):
+                    os.mkdir(col_path)
+                data[col].value_counts().to_csv(
+                    self.result_dir+f'EDA/{col}/{col}_nunique.csv')
+                if data[col].nunique() < 50:
+                    countplot = sns.countplot(data = data, y = col)
+                    for rect in countplot.patches:
+                        width = rect.get_width()/len(data)*100
+                        plt.text(
+                            rect.get_width(), rect.get_y()+0.5*rect.get_height(), '%.2f' % width + '%', ha='left', va='center')
+                    plt.title(f'{col} distribution')
+                    plt.savefig(self.result_dir+f'EDA/{col}/{col}_nunique.png', bbox_inches='tight', pad_inches=0.2)
+                    plt.clf()
+                if col in ['Breakfast_ytd','Method_of_keepintouch','Type_of_play_places']:
+                    splitted_list = []
+                    for i in list(data[col]):
+                        if type(i)!=float:
+                            splitted_list.extend(i.split(';'))
+                    pd.DataFrame(Counter(splitted_list).most_common(),columns=[col,'Frequency']).to_csv(
+                        self.result_dir + f"EDA/{col}/{col}_Unique_Values_Split.csv", index=False)            
+            # Deriving target variable
+            data, emotional_cols, behaviour_cols = self.derive_target(data)
+            # Plotting target class distribution
+            target_dist = data['Wellbeing_Category_WMS'].value_counts().reset_index().rename(columns={'index': 'Wellbeing_Category_WMS','Wellbeing_Category_WMS':'Number_Obs'})
+            fig6 = px.bar(
+                target_dist,x='Wellbeing_Category_WMS',y='Number_Obs',title=f"Target Class Distribution",text_auto=True)
+            fig6.write_image(self.result_dir + f"EDA/Target_Class_Distribution.png")
+            #  Plotting distribution of features by target class 
+            for col in tqdm(data.columns):
+                if (data[col].nunique() < 50) & (col.find('Wellbeing')==-1):
+                    countplot = sns.countplot(
+                        data = data, y = col, hue='Wellbeing_Category_WMS')
+                    for rect in countplot.patches:
+                        width = rect.get_width()/len(data)*100
+                        plt.text(
+                            rect.get_width(), rect.get_y()+0.5*rect.get_height(), '%.2f' % width + '%', ha='left', va='center')
+                    plt.title(f'{col} distribution by wellbeing category', fontdict={'fontsize':24})
+                    plt.legend(loc="best")
+                    plt.savefig(
+                        self.result_dir+f'EDA/{col}/{col}_nunique_by_target.png', bbox_inches='tight', pad_inches=0.2)
+                    plt.clf()
+                if data[col].isnull().sum() != 0:
+                    # Plotting histogram of number of missing values of features by target class
+                    fig4 = px.histogram(
+                        data,x=data[col].isnull(),color='Wellbeing_Category_WMS',title=f"{col} Number of Missing Values by Target",text_auto=True, height=800, width=800)
+                    fig4.write_image(
+                        self.result_dir + f"EDA/{col}/{col}_Count_Missing_By_Target.png")
+        except Exception as e:
+            self.log_writer.log(self.file_object, str(CustomException(e,sys)))
+            raise CustomException(e,sys)
         self.log_writer.log(
             self.file_object, 'Finish performing exploratory data analysis')
 

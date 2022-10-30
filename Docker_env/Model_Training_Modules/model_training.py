@@ -1,6 +1,6 @@
 '''
 Author: Liaw Yi Xian
-Last Modified: 25th October 2022
+Last Modified: 30th October 2022
 '''
 
 import warnings
@@ -9,7 +9,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-import os
+import os, sys
 import optuna
 import joblib
 import time
@@ -47,10 +47,9 @@ from sklearn.base import clone
 from sklearn.metrics import balanced_accuracy_score, matthews_corrcoef, precision_score, recall_score, make_scorer, f1_score,ConfusionMatrixDisplay, classification_report, PrecisionRecallDisplay, average_precision_score, precision_recall_curve, pairwise_distances
 from sklearn.cluster import AffinityPropagation
 from Application_Logger.logger import App_Logger
-
+from Application_Logger.exception import CustomException
 
 random_state=120
-
 
 class model_trainer:
 
@@ -637,10 +636,8 @@ class model_trainer:
                 self.folderpath + obj.__name__ + f"/Hyperparameter_Tuning_Results_{obj.__name__}_Fold_{fold}.csv",index=False)
             del study
         except Exception as e:
-            self.log_writer.log(
-                self.file_object, f'Performing optuna hyperparameter tuning for {obj.__name__} model failed with the following error: {e}')
-            raise Exception(
-                f'Performing optuna hyperparameter tuning for {obj.__name__} model failed with the following error: {e}')
+            self.log_writer.log(self.file_object, str(CustomException(e,sys)))
+            raise CustomException(e,sys)
         return trial
 
     
@@ -650,6 +647,7 @@ class model_trainer:
             Method Name: confusion_matrix_plot
             Description: This method plots confusion matrix and saves plot within the given model class folder.
             Output: None
+            On Failure: Logging error and raise exception
 
             Parameters:
             - clf: Model object
@@ -658,14 +656,18 @@ class model_trainer:
             - actual_labels: Actual target labels from dataset
             - pred_labels: Predicted target labels from model
         '''
-        cmd = ConfusionMatrixDisplay.from_predictions(
-            actual_labels, pred_labels)
-        cmd.ax_.set_title(f"{type(clf).__name__} {figtitle}")
-        cmd.ax_.set_xticklabels(cmd.ax_.get_xticklabels(), rotation = 45)
-        plt.grid(False)
-        cmd.figure_.savefig(
-            self.folderpath+type(clf).__name__+f'/Confusion_Matrix_{type(clf).__name__}_{plotname}.png', bbox_inches='tight', pad_inches=0.2)
-        plt.clf()
+        try:
+            cmd = ConfusionMatrixDisplay.from_predictions(
+                actual_labels, pred_labels)
+            cmd.ax_.set_title(f"{type(clf).__name__} {figtitle}")
+            cmd.ax_.set_xticklabels(cmd.ax_.get_xticklabels(), rotation = 45)
+            plt.grid(False)
+            cmd.figure_.savefig(
+                self.folderpath+type(clf).__name__+f'/Confusion_Matrix_{type(clf).__name__}_{plotname}.png', bbox_inches='tight', pad_inches=0.2)
+            plt.clf()
+        except Exception as e:
+            self.log_writer.log(self.file_object, str(CustomException(e,sys)))
+            raise CustomException(e,sys)
 
 
     def classification_report_plot(
@@ -674,6 +676,7 @@ class model_trainer:
             Method Name: classification_report_plot
             Description: This method plots classification report in heatmap form and saves plot within the given model class folder.
             Output: None
+            On Failure: Logging error and raise exception
 
             Parameters:
             - clf: Model object
@@ -682,15 +685,19 @@ class model_trainer:
             - actual_labels: Actual target labels from dataset
             - pred_labels: Predicted target labels from model
         '''
-        clf_report = classification_report(
-            actual_labels,pred_labels,output_dict=True,digits=4)
-        fig = plt.figure()
-        sns.heatmap(
-            pd.DataFrame(clf_report).iloc[:-1, :].T, annot=True, fmt=".4f")
-        plt.title(f"{type(clf).__name__} {figtitle}")
-        fig.savefig(
-            self.folderpath+type(clf).__name__+f'/Classification_Report_{type(clf).__name__}_{plotname}.png', bbox_inches='tight', pad_inches=0.2)
-        plt.clf()
+        try:
+            clf_report = classification_report(
+                actual_labels,pred_labels,output_dict=True,digits=4)
+            fig = plt.figure()
+            sns.heatmap(
+                pd.DataFrame(clf_report).iloc[:-1, :].T, annot=True, fmt=".4f")
+            plt.title(f"{type(clf).__name__} {figtitle}")
+            fig.savefig(
+                self.folderpath+type(clf).__name__+f'/Classification_Report_{type(clf).__name__}_{plotname}.png', bbox_inches='tight', pad_inches=0.2)
+            plt.clf()
+        except Exception as e:
+            self.log_writer.log(self.file_object, str(CustomException(e,sys)))
+            raise CustomException(e,sys)
 
 
     def precision_recall_plot(
@@ -699,6 +706,7 @@ class model_trainer:
             Method Name: precision_recall_plot
             Description: This method plots precision recall curve and saves plot within the given model class folder.
             Output: None
+            On Failure: Logging error and raise exception
 
             Parameters:
             - clf: Model object
@@ -707,32 +715,36 @@ class model_trainer:
             - actual_labels: Actual target labels from dataset
             - pred_proba: Predicted probability of target being positive (1) from model
         '''
-        classes=['normal', 'emotional_significant','emotional_and_behaviour_significant', 'behaviour_significant']
-        # Use label_binarize to be multi-label like settings
-        Y = label_binarize(actual_labels, classes=classes)
-        # For each class
-        precision, recall, average_precision = dict(), dict(), dict()
-        for i in range(len(classes)):
-            precision[i], recall[i], _ = precision_recall_curve(Y[:,i], np.array(pred_proba)[:,i])
-            average_precision[i] = average_precision_score(Y[:,i], np.array(pred_proba)[:,i])
-        precision["micro"], recall["micro"], _ = precision_recall_curve(Y.ravel(), np.array(pred_proba).ravel())
-        average_precision["micro"] = average_precision_score(Y, pred_proba, average="micro")
-        _, ax = plt.subplots(figsize=(8, 7))
-        for i, color in zip(range(len(classes)), ['red','blue','green','pink']):
-            display = PrecisionRecallDisplay(
-                recall=recall[i],
-                precision=precision[i],
-                average_precision=average_precision[i],
-            )
-            display.plot(ax=ax, name=f"Precision-recall for {classes[i]} class", color=color)
-        PrecisionRecallDisplay(
-            recall=recall["micro"],precision=precision["micro"],average_precision=average_precision["micro"]
-        ).plot(ax=ax, name=f"Precision-recall micro average", color='orange')
-        plt.legend(loc='best',fontsize=8)
-        plt.title(f"{type(clf).__name__} {figtitle}")
-        plt.savefig(
-            self.folderpath+type(clf).__name__+f'/PrecisionRecall_Curve_{type(clf).__name__}_{plotname}.png')
-        plt.clf()
+        try:
+            classes=['normal', 'emotional_significant','emotional_and_behaviour_significant', 'behaviour_significant']
+            # Use label_binarize to be multi-label like settings
+            Y = label_binarize(actual_labels, classes=classes)
+            # For each class
+            precision, recall, average_precision = dict(), dict(), dict()
+            for i in range(len(classes)):
+                precision[i], recall[i], _ = precision_recall_curve(Y[:,i], np.array(pred_proba)[:,i])
+                average_precision[i] = average_precision_score(Y[:,i], np.array(pred_proba)[:,i])
+            precision["micro"], recall["micro"], _ = precision_recall_curve(Y.ravel(), np.array(pred_proba).ravel())
+            average_precision["micro"] = average_precision_score(Y, pred_proba, average="micro")
+            _, ax = plt.subplots(figsize=(8, 7))
+            for i, color in zip(range(len(classes)), ['red','blue','green','pink']):
+                display = PrecisionRecallDisplay(
+                    recall=recall[i],
+                    precision=precision[i],
+                    average_precision=average_precision[i],
+                )
+                display.plot(ax=ax, name=f"Precision-recall for {classes[i]} class", color=color)
+            PrecisionRecallDisplay(
+                recall=recall["micro"],precision=precision["micro"],average_precision=average_precision["micro"]
+            ).plot(ax=ax, name=f"Precision-recall micro average", color='orange')
+            plt.legend(loc='best',fontsize=8)
+            plt.title(f"{type(clf).__name__} {figtitle}")
+            plt.savefig(
+                self.folderpath+type(clf).__name__+f'/PrecisionRecall_Curve_{type(clf).__name__}_{plotname}.png')
+            plt.clf()
+        except Exception as e:
+            self.log_writer.log(self.file_object, str(CustomException(e,sys)))
+            raise CustomException(e,sys)
 
 
     def learning_curve_plot(self, clf, input_data, output_data):
@@ -740,33 +752,42 @@ class model_trainer:
             Method Name: learning_curve_plot
             Description: This method plots learning curve of 5 fold cross validation and saves plot within the given model class folder.
             Output: None
+            On Failure: Logging error and raise exception
 
             Parameters:
             - clf: Model object
             - input_data: Features from dataset
             - output_data: Target column from dataset
         '''
-        if type(clf).__name__ == 'CatBoostClassifier':
-            train_sizes, train_scores, validation_scores = learning_curve(estimator = clf, X = input_data, y = output_data, cv=StratifiedKFold(n_splits=5, shuffle=True, random_state=random_state), scoring='f1_macro', train_sizes=np.linspace(0.3, 1.0, 10))
-            plt.style.use('seaborn-whitegrid')
-            plt.grid(True)
-            plt.fill_between(train_sizes, train_scores.mean(axis = 1) - train_scores.std(axis = 1), train_scores.mean(axis = 1) + train_scores.std(axis = 1), alpha=0.25, color='blue')
-            plt.plot(train_sizes, train_scores.mean(axis = 1), label = 'Training Score', marker='.',markersize=14)
-            plt.fill_between(train_sizes, validation_scores.mean(axis = 1) - validation_scores.std(axis = 1), validation_scores.mean(axis = 1) + validation_scores.std(axis = 1), alpha=0.25, color='green')
-            plt.plot(train_sizes, validation_scores.mean(axis = 1), label = 'Cross Validation Score', marker='.',markersize=14)
-            plt.ylabel('Score')
-            plt.xlabel('Training instances')
-            plt.title(f'Learning Curve for {type(clf).__name__}')
-            plt.legend(frameon=True, loc='best')
-            plt.savefig(
-                self.folderpath+type(clf).__name__+f'/LearningCurve_{type(clf).__name__}.png',bbox_inches='tight')
-            plt.clf()
-        else:
-            visualizer = LearningCurve(
-                clf, cv= StratifiedKFold(n_splits=5, shuffle=True, random_state=random_state), scoring='f1_macro', train_sizes=np.linspace(0.3, 1.0, 10))
-            visualizer.fit(input_data,output_data)
-            visualizer.show(
-                outpath=self.folderpath+type(clf).__name__+f'/LearningCurve_{type(clf).__name__}.png',clear_figure=True)
+        try:
+            if type(clf).__name__ == 'CatBoostClassifier':
+                train_sizes, train_scores, validation_scores = learning_curve(estimator = clf, X = input_data, y = output_data, cv=StratifiedKFold(n_splits=5, shuffle=True, random_state=random_state), scoring='f1_macro', train_sizes=np.linspace(0.3, 1.0, 10))
+                plt.style.use('seaborn-whitegrid')
+                plt.grid(True)
+                plt.fill_between(
+                    train_sizes, train_scores.mean(axis = 1) - train_scores.std(axis = 1), train_scores.mean(axis = 1) + train_scores.std(axis = 1), alpha=0.25, color='blue')
+                plt.plot(
+                    train_sizes, train_scores.mean(axis = 1), label = 'Training Score', marker='.',markersize=14)
+                plt.fill_between(
+                    train_sizes, validation_scores.mean(axis = 1) - validation_scores.std(axis = 1), validation_scores.mean(axis = 1) + validation_scores.std(axis = 1), alpha=0.25, color='green')
+                plt.plot(
+                    train_sizes, validation_scores.mean(axis = 1), label = 'Cross Validation Score', marker='.',markersize=14)
+                plt.ylabel('Score')
+                plt.xlabel('Training instances')
+                plt.title(f'Learning Curve for {type(clf).__name__}')
+                plt.legend(frameon=True, loc='best')
+                plt.savefig(
+                    self.folderpath+type(clf).__name__+f'/LearningCurve_{type(clf).__name__}.png',bbox_inches='tight')
+                plt.clf()
+            else:
+                visualizer = LearningCurve(
+                    clf, cv= StratifiedKFold(n_splits=5, shuffle=True, random_state=random_state), scoring='f1_macro', train_sizes=np.linspace(0.3, 1.0, 10))
+                visualizer.fit(input_data,output_data)
+                visualizer.show(
+                    outpath=self.folderpath+type(clf).__name__+f'/LearningCurve_{type(clf).__name__}.png',clear_figure=True)
+        except Exception as e:
+            self.log_writer.log(self.file_object, str(CustomException(e,sys)))
+            raise CustomException(e,sys)
 
 
     def shap_plot(self, clf, input_data):
@@ -774,40 +795,45 @@ class model_trainer:
             Method Name: shap_plot
             Description: This method plots feature importance and its summary using shap values and saves plot within the given model class folder. Note that this function will not work specifically for XGBoost models that use 'dart' booster. In addition, shap plots for KNeighbors and GaussianNB require use of shap's Kernel explainer that involves high computational time. Thus, this function excludes both KNeighbors and GaussianNB.
             Output: None
+            On Failure: Logging error and raise exception
 
             Parameters:
             - clf: Model object
             - input_data: Features from dataset
         '''
-        if (type(clf).__name__ not in ['KNeighborsClassifier','GaussianNB']):
-            if type(clf).__name__ in ['LogisticRegression','LinearSVC']:
-                explainer = shap.LinearExplainer(clf, input_data)
-                explainer_obj = explainer(input_data)
-                shap_values = explainer.shap_values(input_data)
-            else:
-                if ('dart' in clf.get_params().values()) and (type(clf).__name__ == 'XGBClassifier'):
-                    return
-                explainer = shap.TreeExplainer(clf)
-                explainer_obj = explainer(input_data)
-                shap_values = explainer.shap_values(input_data)
-            classes=['normal', 'emotional_significant','emotional_and_behaviour_significant', 'behaviour_significant']
-            for index in range(len(classes)):
-                plt.figure()
-                shap.summary_plot(
-                    shap_values[index], input_data, plot_type="bar", show=False, max_display=40)
-                plt.title(
-                    f'Shap Feature Importances for {type(clf).__name__} from {classes[index]} class')
-                plt.savefig(
-                    self.folderpath+type(clf).__name__+f'/Shap_Feature_Importances_{type(clf).__name__}_{classes[index]}.png',bbox_inches='tight')
-                plt.clf()
-                plt.figure()
-                shap.plots.beeswarm(
-                    explainer_obj[:,:,index], show=False, max_display=40)
-                plt.title(
-                    f'Shap Summary Plot for {type(clf).__name__} from {classes[index]} class')
-                plt.savefig(
-                    self.folderpath+type(clf).__name__+f'/Shap_Summary_Plot_{type(clf).__name__}_{classes[index]}.png',bbox_inches='tight')
-                plt.clf()
+        try:
+            if (type(clf).__name__ not in ['KNeighborsClassifier','GaussianNB']):
+                if type(clf).__name__ in ['LogisticRegression','LinearSVC']:
+                    explainer = shap.LinearExplainer(clf, input_data)
+                    explainer_obj = explainer(input_data)
+                    shap_values = explainer.shap_values(input_data)
+                else:
+                    if ('dart' in clf.get_params().values()) and (type(clf).__name__ == 'XGBClassifier'):
+                        return
+                    explainer = shap.TreeExplainer(clf)
+                    explainer_obj = explainer(input_data)
+                    shap_values = explainer.shap_values(input_data)
+                classes=['normal', 'emotional_significant','emotional_and_behaviour_significant', 'behaviour_significant']
+                for index in range(len(classes)):
+                    plt.figure()
+                    shap.summary_plot(
+                        shap_values[index], input_data, plot_type="bar", show=False, max_display=40)
+                    plt.title(
+                        f'Shap Feature Importances for {type(clf).__name__} from {classes[index]} class')
+                    plt.savefig(
+                        self.folderpath+type(clf).__name__+f'/Shap_Feature_Importances_{type(clf).__name__}_{classes[index]}.png',bbox_inches='tight')
+                    plt.clf()
+                    plt.figure()
+                    shap.plots.beeswarm(
+                        explainer_obj[:,:,index], show=False, max_display=40)
+                    plt.title(
+                        f'Shap Summary Plot for {type(clf).__name__} from {classes[index]} class')
+                    plt.savefig(
+                        self.folderpath+type(clf).__name__+f'/Shap_Summary_Plot_{type(clf).__name__}_{classes[index]}.png',bbox_inches='tight')
+                    plt.clf()
+        except Exception as e:
+            self.log_writer.log(self.file_object, str(CustomException(e,sys)))
+            raise CustomException(e,sys)
 
 
     def model_training(
@@ -833,37 +859,41 @@ class model_trainer:
             - n_trials: Number of trials for Optuna hyperparameter tuning
             - fold_num: Indication of fold number for model training (can be integer or string "overall")
         '''
-        func = lambda trial: obj(trial, input_data, output_data)
-        func.__name__ = type(clf).__name__
-        self.log_writer.log(
-            self.file_object, f"Start hyperparameter tuning for {type(clf).__name__} for fold {fold_num}")
-        best_trial = self.optuna_optimizer(func, n_trials, fold_num)
-        self.log_writer.log(
-            self.file_object, f"Hyperparameter tuning for {type(clf).__name__} completed for fold {fold_num}")
-        self.log_writer.log(
-            self.file_object, f"Start using best pipeline for {type(clf).__name__} for transforming training and validation data for fold {fold_num}")
-        best_pipeline = best_trial.user_attrs['Pipeline']
-        output_data = output_data.map({'normal':0,'emotional_significant':1,'behaviour_significant':2,'emotional_and_behaviour_significant':3})
-        input_data_transformed = best_pipeline.fit_transform(
-            input_data, output_data)
-        if 'smote' in best_pipeline.named_steps.keys():
-            output_data_transformed = best_pipeline.steps[0][1].fit_resample(input_data, output_data)[1]
-        else:
-            output_data_transformed = output_data
-        self.log_writer.log(
-            self.file_object, f"Finish using best pipeline for {type(clf).__name__} for transforming training and validation data for fold {fold_num}")
-        for parameter in ['missing','balancing','contrast_method','scaling','feature_selection','number_features','feature_selection_missing','damping','cluster_indicator']:
-            if parameter in best_trial.params.keys():
-                best_trial.params.pop(parameter)
-        for weight_param in ['class_weight','auto_class_weights']:
-            if weight_param in best_trial.params.keys():
-                if best_trial.params[weight_param] == 'None':
-                    best_trial.params.pop(weight_param)
-        self.log_writer.log(
-            self.file_object, f"Start evaluating model performance for {type(clf).__name__} on validation set for fold {fold_num}")
-        model_copy = clone(clf)
-        model_copy = model_copy.set_params(**best_trial.params)
-        model_copy.fit(input_data_transformed, output_data_transformed)
+        try:
+            func = lambda trial: obj(trial, input_data, output_data)
+            func.__name__ = type(clf).__name__
+            self.log_writer.log(
+                self.file_object, f"Start hyperparameter tuning for {type(clf).__name__} for fold {fold_num}")
+            best_trial = self.optuna_optimizer(func, n_trials, fold_num)
+            self.log_writer.log(
+                self.file_object, f"Hyperparameter tuning for {type(clf).__name__} completed for fold {fold_num}")
+            self.log_writer.log(
+                self.file_object, f"Start using best pipeline for {type(clf).__name__} for transforming training and validation data for fold {fold_num}")
+            best_pipeline = best_trial.user_attrs['Pipeline']
+            output_data = output_data.map({'normal':0,'emotional_significant':1,'behaviour_significant':2,'emotional_and_behaviour_significant':3})
+            input_data_transformed = best_pipeline.fit_transform(
+                input_data, output_data)
+            if 'smote' in best_pipeline.named_steps.keys():
+                output_data_transformed = best_pipeline.steps[0][1].fit_resample(input_data, output_data)[1]
+            else:
+                output_data_transformed = output_data
+            self.log_writer.log(
+                self.file_object, f"Finish using best pipeline for {type(clf).__name__} for transforming training and validation data for fold {fold_num}")
+            for parameter in ['missing','balancing','contrast_method','scaling','feature_selection','number_features','feature_selection_missing','damping','cluster_indicator']:
+                if parameter in best_trial.params.keys():
+                    best_trial.params.pop(parameter)
+            for weight_param in ['class_weight','auto_class_weights']:
+                if weight_param in best_trial.params.keys():
+                    if best_trial.params[weight_param] == 'None':
+                        best_trial.params.pop(weight_param)
+            self.log_writer.log(
+                self.file_object, f"Start evaluating model performance for {type(clf).__name__} on validation set for fold {fold_num}")
+            model_copy = clone(clf)
+            model_copy = model_copy.set_params(**best_trial.params)
+            model_copy.fit(input_data_transformed, output_data_transformed)
+        except Exception as e:
+            self.log_writer.log(self.file_object, str(CustomException(e,sys)))
+            raise CustomException(e,sys)
         return model_copy, best_trial, input_data_transformed, output_data_transformed, best_pipeline
 
 
@@ -946,10 +976,8 @@ class model_trainer:
             self.precision_recall_plot(
                 clf, 'Precision Recall Curve', 'CV', actual_labels, pred_proba)
         except Exception as e:
-            self.log_writer.log(
-                self.file_object, f'Hyperparameter tuning on {type(clf).__name__} model failed with the following error: {e}')
-            raise Exception(
-                f'Hyperparameter tuning on {type(clf).__name__} model failed with the following error: {e}')
+            self.log_writer.log(self.file_object, str(CustomException(e,sys)))
+            raise CustomException(e,sys)
 
 
     def final_overall_model(self, obj, clf, input_data, output_data, n_trials):
@@ -965,6 +993,7 @@ class model_trainer:
             6. Shap Summary Plot for every class (beeswarm plot image)
             
             Output: None
+            On Failure: Logging error and raise exception
 
             Parameters:
             - obj: Optuna objective function
@@ -975,24 +1004,28 @@ class model_trainer:
         '''
         self.log_writer.log(
             self.file_object, f"Start final model training on all data for {type(clf).__name__}")
-        overall_model, best_trial, input_data_transformed, output_data_transformed, best_pipeline = self.model_training(
-            clf, obj, input_data, output_data, n_trials, 'overall')
-        joblib.dump(best_pipeline,'Saved_Models/Preprocessing_Pipeline.pkl')
-        joblib.dump(overall_model,'Saved_Models/FinalModel.pkl')
-        dict_class = {0:'normal',1:'emotional_significant',2:'behaviour_significant',3:'emotional_and_behaviour_significant'}
-        actual_labels = [dict_class[k] for k in output_data_transformed]
-        pred_labels = overall_model.predict(input_data_transformed)
-        pred_labels = [dict_class[k] for k in pred_labels]
-        pred_proba = overall_model.predict_proba(input_data_transformed) if type(overall_model).__name__ != 'LinearSVC' else overall_model._predict_proba_lr(input_data_transformed)
-        self.confusion_matrix_plot(
-            clf, 'Confusion Matrix - Final Model', 'Final_Model', actual_labels, pred_labels)
-        self.classification_report_plot(
-            clf, 'Classification Report - Final Model', 'Final_Model', actual_labels, pred_labels)
-        self.precision_recall_plot(
-            clf, 'Precision Recall Curve - Final Model', 'Final_Model', actual_labels, pred_proba)
-        self.learning_curve_plot(
-            overall_model, input_data_transformed, output_data_transformed)
-        self.shap_plot(overall_model, input_data_transformed)
+        try:
+            overall_model, best_trial, input_data_transformed, output_data_transformed, best_pipeline = self.model_training(
+                clf, obj, input_data, output_data, n_trials, 'overall')
+            joblib.dump(best_pipeline,'Saved_Models/Preprocessing_Pipeline.pkl')
+            joblib.dump(overall_model,'Saved_Models/FinalModel.pkl')
+            dict_class = {0:'normal',1:'emotional_significant',2:'behaviour_significant',3:'emotional_and_behaviour_significant'}
+            actual_labels = [dict_class[k] for k in output_data_transformed]
+            pred_labels = overall_model.predict(input_data_transformed)
+            pred_labels = [dict_class[k] for k in pred_labels]
+            pred_proba = overall_model.predict_proba(input_data_transformed) if type(overall_model).__name__ != 'LinearSVC' else overall_model._predict_proba_lr(input_data_transformed)
+            self.confusion_matrix_plot(
+                clf, 'Confusion Matrix - Final Model', 'Final_Model', actual_labels, pred_labels)
+            self.classification_report_plot(
+                clf, 'Classification Report - Final Model', 'Final_Model', actual_labels, pred_labels)
+            self.precision_recall_plot(
+                clf, 'Precision Recall Curve - Final Model', 'Final_Model', actual_labels, pred_proba)
+            self.learning_curve_plot(
+                overall_model, input_data_transformed, output_data_transformed)
+            self.shap_plot(overall_model, input_data_transformed)
+        except Exception as e:
+            self.log_writer.log(self.file_object, str(CustomException(e,sys)))
+            raise CustomException(e,sys)
         self.log_writer.log(
             self.file_object, f"Finish final model training on all data for {type(clf).__name__}")
         
@@ -1089,6 +1122,7 @@ class FeatureEngineTransformer(BaseEstimator, TransformerMixin):
         '''
         pass
 
+
     def fit(self, X, y=None):
         '''
             Method Name: fit
@@ -1154,6 +1188,7 @@ class IntervalDataTransformer(BaseEstimator, TransformerMixin):
             Output: None
         '''
         pass
+
 
     def fit(self, X, y=None):
         '''
@@ -1273,6 +1308,7 @@ class BinaryDataTransformer(BaseEstimator, TransformerMixin):
         '''
         pass
 
+
     def fit(self, X, y=None):
         '''
             Method Name: fit
@@ -1352,6 +1388,7 @@ class OrdinalDataTransformer(BaseEstimator, TransformerMixin):
             Output: None
         '''
         pass
+
 
     def fit(self, X, y=None):
         '''
@@ -1439,7 +1476,7 @@ class FeatureSelectionTransformer(BaseEstimator, TransformerMixin):
             Output: None
 
             Parameters:
-            - method: String that represents method of feature selection (Accepted values are 'BorutaShap', 'Lasso', 'FeatureImportance_ET', 'FeatureImportance_self', 'MutualInformation', 'ANOVA', 'FeatureWiz')
+            - method: String that represents method of feature selection (Accepted values are 'BorutaShap', 'Lasso', 'FeatureImportance_ET', 'MutualInformation', 'ANOVA', 'FeatureWiz')
             - model: Model object
             - scaling_indicator: String that represents method of performing feature scaling. (Accepted values are 'MinMax' and 'no'). Default value is 'no'
             - cluster_indicator: String indicator of including cluster-related feature (yes or no). Default value is 'no'
@@ -1489,12 +1526,6 @@ class FeatureSelectionTransformer(BaseEstimator, TransformerMixin):
             self.sub_columns =  result.loc[result['Value'].nlargest(self.number).index.tolist()]['Variable'].tolist()
         elif self.method == 'FeatureImportance_ET':
             fimp_model = ExtraTreesClassifier(random_state=random_state)
-            fimportance_selector = SelectFromModel(
-                fimp_model,max_features=self.number,threshold=0.0)
-            fimportance_selector.fit(X_,y)
-            self.sub_columns = X_.columns[fimportance_selector.get_support()].to_list()
-        elif self.method == 'FeatureImportance_self':
-            fimp_model = clone(self.model)
             fimportance_selector = SelectFromModel(
                 fimp_model,max_features=self.number,threshold=0.0)
             fimportance_selector.fit(X_,y)
